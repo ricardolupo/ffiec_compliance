@@ -1,0 +1,15 @@
+name: FFIEC_compliance
+title: FFIEC Example Compliance profile
+maintainer: Ricardo Lupo
+copyright: Ricardo Lupo
+copyright_email: nospam@chef.io
+license: Apache-2.0
+summary: An InSpec Compliance Profile to show FFIEC
+version: 1.0.0
+
+depends:
+  - name: cis-centos-level1-server
+    compliance: delivery/cis-centos7-level1-server
+  - name: ffiec_compliance 
+    git: https://github.com/ricardolupo/ffiec_compliance
+    branch: master
