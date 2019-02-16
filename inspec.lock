@@ -1,0 +1,9 @@
+---
+lockfile_version: 1
+depends:
+- name: cis-centos-level1-server
+  resolved_source:
+    compliance: delivery/cis-centos7-level1-server
+    url: https://aut-automate-server/api/v0/compliance/profiles/tar
+    sha256: 6688d1cf740aa92537c6b02cb2366e27ab4a69a83f80eff59a43b79ed332169a
+  version_constraints: []

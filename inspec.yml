@@ -10,6 +10,3 @@ version: 1.0.0
 depends:
   - name: cis-centos-level1-server
     compliance: delivery/cis-centos7-level1-server
-  - name: ffiec_compliance 
-    git: https://github.com/ricardolupo/ffiec_compliance
-    branch: master
