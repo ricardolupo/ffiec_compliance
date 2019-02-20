@@ -1,9 +1,9 @@
 ---
 lockfile_version: 1
 depends:
-- name: cis-centos-level1-server
+- name: cis-ubuntu16.04lts-level1-server
   resolved_source:
-    compliance: delivery/cis-centos7-level1-server
+    compliance: delivery/cis-ubuntu16.04lts-level1-server
     url: https://aut-automate-server/api/v0/compliance/profiles/tar
-    sha256: 6688d1cf740aa92537c6b02cb2366e27ab4a69a83f80eff59a43b79ed332169a
+    sha256: e9e665cc2c132ee2fb38c17cf8650f52b93d4a729ee47eec755faee3a280fe4e
   version_constraints: []

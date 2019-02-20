@@ -6,10 +6,25 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.1_Ensure_mounting_of_cramfs_
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the server. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('cramfs') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v cramfs").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^cramfs\s+/) }
+    end
   end
 end
 
@@ -21,10 +36,25 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.2_Ensure_mounting_of_freevxf
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('freevxfs') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v freevxfs").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^freevxfs\s+/) }
+    end
   end
 end
 
@@ -36,10 +66,25 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.3_Ensure_mounting_of_jffs2_f
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('jffs2') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v jffs2").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^jffs2\s+/) }
+    end
   end
 end
 
@@ -51,10 +96,25 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.4_Ensure_mounting_of_hfs_fil
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('hfs') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v hfs").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^hfs\s+/) }
+    end
   end
 end
 
@@ -66,25 +126,55 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.5_Ensure_mounting_of_hfsplus
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('hfsplus') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v hfsplus").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^hfsplus\s+/) }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.6_Ensure_mounting_of_squashfs_filesystems_is_disabled" do
   title "Ensure mounting of squashfs filesystems is disabled"
   desc  "
-    The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs ). A squashfs image can be used without having to first decompress the image.
+    The squashfs filesystem type is a compressed read-only Linux filesystem embedded in small footprint systems (similar to cramfs). A squashfs image can be used without having to first decompress the image.
     
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('squashfs') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v squashfs").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^squashfs\s+/) }
+    end
   end
 end
 
@@ -96,10 +186,55 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.7_Ensure_mounting_of_udf_fil
     Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
   "
   impact 1.0
-  describe kernel_module('udf') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  a = command("modprobe -n -v udf").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^udf\s+/) }
+    end
+  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.1.8_Ensure_mounting_of_FAT_filesystems_is_disabled" do
+  title "Ensure mounting of FAT filesystems is disabled"
+  desc  "
+    The FAT filesystem format is primarily used on older windows systems and portable USB drives or flash modules. It comes in three types FAT12, FAT16, and FAT32 all of which are supported by the vfat kernel module.
+    
+    Rationale: Removing support for unneeded filesystem types reduces the local attack surface of the system. If this filesystem type is not needed, disable it.
+  "
+  impact 1.0
+  a = command("modprobe -n -v vfat").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^vfat\s+/) }
+    end
   end
 end
 
@@ -108,7 +243,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.3_Ensure_nodev_option_set_on_t
   desc  "
     The nodev mount option specifies that the filesystem cannot contain special devices.
     
-    Rationale: Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp .
+    Rationale: Since the /tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /tmp.
   "
   impact 1.0
   describe mount("/tmp") do
@@ -124,7 +259,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.4_Ensure_nosuid_option_set_on_
   desc  "
     The nosuid mount option specifies that the filesystem cannot contain setuid files.
     
-    Rationale: Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /tmp .
+    Rationale: Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /tmp.
   "
   impact 1.0
   describe mount("/tmp") do
@@ -135,28 +270,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.4_Ensure_nosuid_option_set_on_
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.5_Ensure_noexec_option_set_on_tmp_partition" do
-  title "Ensure noexec option set on /tmp partition"
-  desc  "
-    The noexec mount option specifies that the filesystem cannot contain executable binaries.
-    
-    Rationale: Since the /tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /tmp .
-  "
-  impact 1.0
-  describe mount("/tmp") do
-    it { should be_mounted }
-  end
-  describe mount("/tmp") do
-    its("options") { should include "noexec" }
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.8_Ensure_nodev_option_set_on_vartmp_partition" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.7_Ensure_nodev_option_set_on_vartmp_partition" do
   title "Ensure nodev option set on /var/tmp partition"
   desc  "
     The nodev mount option specifies that the filesystem cannot contain special devices.
     
-    Rationale: Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp .
+    Rationale: Since the /var/tmp filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create block or character special devices in /var/tmp.
   "
   impact 1.0
   describe mount("/var/tmp") do
@@ -167,12 +286,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.8_Ensure_nodev_option_set_on_v
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.9_Ensure_nosuid_option_set_on_vartmp_partition" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.8_Ensure_nosuid_option_set_on_vartmp_partition" do
   title "Ensure nosuid option set on /var/tmp partition"
   desc  "
     The nosuid mount option specifies that the filesystem cannot contain setuid files.
     
-    Rationale: Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /var/tmp .
+    Rationale: Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot create setuid files in /var/tmp.
   "
   impact 1.0
   describe mount("/var/tmp") do
@@ -183,12 +302,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.9_Ensure_nosuid_option_set_on_
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.10_Ensure_noexec_option_set_on_vartmp_partition" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.9_Ensure_noexec_option_set_on_vartmp_partition" do
   title "Ensure noexec option set on /var/tmp partition"
   desc  "
     The noexec mount option specifies that the filesystem cannot contain executable binaries.
     
-    Rationale: Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /var/tmp .
+    Rationale: Since the /var/tmp filesystem is only intended for temporary file storage, set this option to ensure that users cannot run executable binaries from /var/tmp.
   "
   impact 1.0
   describe mount("/var/tmp") do
@@ -199,7 +318,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.10_Ensure_noexec_option_set_on
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.14_Ensure_nodev_option_set_on_home_partition" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.13_Ensure_nodev_option_set_on_home_partition" do
   title "Ensure nodev option set on /home partition"
   desc  "
     The nodev mount option specifies that the filesystem cannot contain special devices.
@@ -215,12 +334,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.14_Ensure_nodev_option_set_on_
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.15_Ensure_nodev_option_set_on_devshm_partition" do
-  title "Ensure nodev option set on /dev/shm partition"
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.14_Ensure_nodev_option_set_on_devshm_partitiov" do
+  title "Ensure nodev option set on /dev/shm partitiov"
   desc  "
     The nodev mount option specifies that the filesystem cannot contain special devices.
     
-    Rationale: Since the /dev/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /dev/shm partitions.
+    Rationale: Since the /run/shm filesystem is not intended to support devices, set this option to ensure that users cannot attempt to create special devices in /dev/shm partitions.
   "
   impact 1.0
   describe mount("/dev/shm") do
@@ -231,8 +350,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.15_Ensure_nodev_option_set_on_
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.16_Ensure_nosuid_option_set_on_devshm_partition" do
-  title "Ensure nosuid option set on /dev/shm partition"
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.15_Ensure_nosuid_option_set_on_devshm_partitionrun" do
+  title "Ensure nosuid option set on /dev/shm partitionrun"
   desc  "
     The nosuid mount option specifies that the filesystem cannot contain setuid files.
     
@@ -247,7 +366,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.16_Ensure_nosuid_option_set_on
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.17_Ensure_noexec_option_set_on_devshm_partition" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.16_Ensure_noexec_option_set_on_devshm_partition" do
   title "Ensure noexec option set on /dev/shm partition"
   desc  "
     The noexec mount option specifies that the filesystem cannot contain executable binaries.
@@ -263,7 +382,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.17_Ensure_noexec_option_set_on
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.18_Ensure_nodev_option_set_on_removable_media_partitions" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.17_Ensure_nodev_option_set_on_removable_media_partitions" do
   title "Ensure nodev option set on removable media partitions"
   desc  "
     The nodev mount option specifies that the filesystem cannot contain special devices.
@@ -271,12 +390,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.18_Ensure_nodev_option_set_on_
     Rationale: Removable media containing character and block special devices could be used to circumvent security controls by allowing non-root users to access sensitive device files such as /dev/kmem or the raw disk partitions.
   "
   impact 0.0
-  describe 'removable media partitions' do
-    skip 'Ensure nodev option set on removable media partitions'
-  end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.19_Ensure_nosuid_option_set_on_removable_media_partitions" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.18_Ensure_nosuid_option_set_on_removable_media_partitions" do
   title "Ensure nosuid option set on removable media partitions"
   desc  "
     The nosuid mount option specifies that the filesystem cannot contain setuid files.
@@ -284,12 +400,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.19_Ensure_nosuid_option_set_on
     Rationale: Setting this option on a file system prevents users from introducing privileged programs onto the system and allowing non-root users to execute them.
   "
   impact 0.0
-  describe 'removable media partitions' do
-    skip 'Ensure nosuid option set on removable media partitions'
-  end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.20_Ensure_noexec_option_set_on_removable_media_partitions" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.19_Ensure_noexec_option_set_on_removable_media_partitions" do
   title "Ensure noexec option set on removable media partitions"
   desc  "
     The noexec mount option specifies that the filesystem cannot contain executable binaries.
@@ -297,25 +410,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.20_Ensure_noexec_option_set_on
     Rationale: Setting this option on a file system prevents users from executing programs from the removable media. This deters users from being able to introduce potentially malicious software on the system.
   "
   impact 0.0
-  describe 'removable media partitions' do
-    skip 'Ensure noexec option set on removable media partitions'
-  end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.21_Ensure_sticky_bit_is_set_on_all_world-writable_directories" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.20_Ensure_sticky_bit_is_set_on_all_world-writable_directories" do
   title "Ensure sticky bit is set on all world-writable directories"
   desc  "
     Setting the sticky bit on world writable directories prevents users from deleting or renaming files in that directory that are not owned by them.
     
-    Rationale: This feature prevents the ability to delete or rename files in world writable directories (such as /tmp ) that are owned by another user.
+    Rationale: This feature prevents the ability to delete or rename files in world writable directories (such as /tmp) that are owned by another user.
   "
   impact 1.0
-  describe command('find / -path /proc -prune -o -type d \( -perm -0002 -a ! -perm -1000 \) -print 2>/dev/null') do
-    its('stdout') { should eq ""}
-  end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_1.1.22_Disable_Automounting" do
+control "xccdf_org.cisecurity.benchmarks_rule_1.1.21_Disable_Automounting" do
   title "Disable Automounting"
   desc  "
     autofs allows automatic mounting of devices, typically including CD/DVDs and USB drives.
@@ -323,9 +430,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.1.22_Disable_Automounting" do
     Rationale: With automounting enabled anyone with physical access could attach a USB drive or disc and have its contents available in system even if they lacked permissions to mount it themselves.
   "
   impact 1.0
-  describe service('autofs') do
-    it { should_not be_running }
-    it { should_not be_enabled }
+  a = command("systemctl is-enabled autofs.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -337,9 +449,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.2.1_Ensure_package_manager_repos
     Rationale: If a system's package repositories are misconfigured important patches may not be identified or a rogue repository could introduce compromised software.
   "
   impact 0.0
-  describe 'Package manager repository configuration' do
-    skip 'Ensure package manager repositories are configured'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.2.2_Ensure_GPG_keys_are_configured" do
@@ -350,30 +459,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.2.2_Ensure_GPG_keys_are_configur
     Rationale: It is important to ensure that updates are obtained from a valid source to protect against spoofing that could lead to the inadvertent installation of malware on the system.
   "
   impact 0.0
-  describe 'GPG configuration' do
-    skip 'Ensure GPG keys are configured'
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_1.2.3_Ensure_gpgcheck_is_globally_activated" do
-  title "Ensure gpgcheck is globally activated"
-  desc  "
-    The gpgcheck option, found in the main section of the /etc/yum.conf and individual /etc/yum/repos.d/* files determines if an RPM package's signature is checked prior to its installation.
-    
-    Rationale: It is important to ensure that an RPM's package signature is always checked prior to installation to ensure that the software is obtained from a trusted source.
-  "
-  impact 1.0
-  command("find /etc/yum.repos.d -type f -regex .\\*/.\\*").stdout.split.each do |entry|
-    describe file(entry) do
-      its("content") { should_not match(/^\s*gpgcheck\s*=\s*[^1]\s*(\s+#.*)?$/) }
-    end
-  end
-  describe file("/etc/yum.conf") do
-    its("content") { should match(/^\s*gpgcheck\s*=\s*1\s*(\s+#.*)?$/) }
-  end
-  describe file("/etc/yum.conf") do
-    its("content") { should_not match(/^\s*gpgcheck\s*=\s*[^1]\s*(\s+#.*)?$/) }
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.3.1_Ensure_AIDE_is_installed" do
@@ -398,20 +483,35 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.3.2_Ensure_filesystem_integrity_
   "
   impact 1.0
   describe.one do
-    describe crontab do
-      its('commands') { should include '/usr/sbin/aide --check' }
+    describe file("/var/spool/cron/crontabs/root") do
+      its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
     end
-    crontab_path = ['/etc/cron.hourly/', '/etc/cron.daily/', '/etc/cron.weekly/', '/etc/cron.monthly/', '/etc/cron.d/']
-    all_cron_files = Hash.new
-    crontab_path.map { |path| all_cron_files[path] = command("ls #{path}").stdout.split("\n") }
-    all_cron_files.each do |cron_path, cron_files|
-      unless cron_files.empty?
-        cron_files.each do |cron_file|
-          temp = file(cron_path+cron_file)
-          describe temp do
-            its('content') { should include 'aide --check'}
-          end
-        end
+    describe file("/etc/crontab") do
+      its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
+    end
+    command("find /etc/cron.d -type f -regex .\\*/.\\*").stdout.split.each do |entry|
+      describe file(entry) do
+        its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
+      end
+    end
+    command("find /etc/cron.hourly -type f -regex .\\*/.\\*").stdout.split.each do |entry|
+      describe file(entry) do
+        its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
+      end
+    end
+    command("find /etc/cron.daily -type f -regex .\\*/.\\*").stdout.split.each do |entry|
+      describe file(entry) do
+        its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
+      end
+    end
+    command("find /etc/cron.weekly -type f -regex .\\*/.\\*").stdout.split.each do |entry|
+      describe file(entry) do
+        its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
+      end
+    end
+    command("find /etc/cron.monthly -type f -regex .\\*/.\\*").stdout.split.each do |entry|
+      describe file(entry) do
+        its("content") { should match(/^\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\/usr\/bin\/aide --check/) }
       end
     end
   end
@@ -420,63 +520,36 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_1.4.1_Ensure_permissions_on_bootloader_config_are_configured" do
   title "Ensure permissions on bootloader config are configured"
   desc  "
-    The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually located at /boot/grub2/grub.cfg and linked as /etc/grub2.cfg. Additional settings can be found in the /boot/grub2/user.cfg file.
+    The grub configuration file contains information on boot settings and passwords for unlocking boot options. The grub configuration is usually grub.cfg stored in /boot/grub.
     
     Rationale: Setting the permissions to read and write for root only prevents non-root users from seeing the boot parameters or changing them. Non-root users who read the boot parameters may be able to identify weaknesses in security upon boot and be able to exploit them.
   "
   impact 1.0
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should exist }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_executable.by "group" }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_readable.by "group" }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     its("gid") { should cmp 0 }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_writable.by "group" }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_executable.by "other" }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_readable.by "other" }
   end
-  describe file("/boot/grub2/grub.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     it { should_not be_writable.by "other" }
   end
-  describe file("/boot/grub2/grub.cfg") do
-    its("uid") { should cmp 0 }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should exist }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_executable.by "group" }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_readable.by "group" }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    its("gid") { should cmp 0 }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_writable.by "group" }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_executable.by "other" }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_readable.by "other" }
-  end
-  describe file("/boot/grub2/user.cfg") do
-    it { should_not be_writable.by "other" }
-  end
-  describe file("/boot/grub2/user.cfg") do
+  describe file("/boot/grub/grub.cfg") do
     its("uid") { should cmp 0 }
   end
 end
@@ -489,25 +562,38 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.4.2_Ensure_bootloader_password_i
     Rationale: Requiring a boot password upon execution of the boot loader will prevent an unauthorized user from entering boot parameters or changing the boot partition. This prevents users from weakening security (e.g. turning off SELinux at boot time).
   "
   impact 1.0
-  describe file("/boot/grub2/user.cfg") do
-    its("content") { should match(/^GRUB2_PASSWORD=.+$/) }
+  describe.one do
+    describe file("/boot/grub/grub.cfg") do
+      its("content") { should match(/^\s*set\s+superusers\s*=\s*"[^"]*"\s*(\s+#.*)?$/) }
+    end
+    describe file("/boot/grub/grub.cfg") do
+      its("content") { should match(/^\s*password_pbkdf2\s+\S+\s+\S+\s*(\s+#.*)?$/) }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.4.3_Ensure_authentication_required_for_single_user_mode" do
   title "Ensure authentication required for single user mode"
   desc  "
-    Single user mode (rescue mode) is used for recovery when the system detects an issue during boot or by manual selection from the bootloader.
+    Single user mode is used for recovery when the system detects an issue during boot or by manual selection from the bootloader.
     
-    Rationale: Requiring authentication in single user mode (rescue mode) prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials.
+    Rationale: Requiring authentication in single user mode prevents an unauthorized user from rebooting the system into single user to gain root privileges without credentials.
   "
   impact 1.0
-  describe ini('/usr/lib/systemd/system/emergency.service') do
-    its(['Service', 'ExecStart']) { should eq '-/bin/sh -c "/usr/sbin/sulogin; /usr/bin/systemctl --fail --no-block default"' }
-  end
-  describe ini('/usr/lib/systemd/system/rescue.service') do
-    its(['Service', 'ExecStart']) { should eq '-/bin/sh -c "/usr/sbin/sulogin; /usr/bin/systemctl --fail --no-block default"' }
-  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_1.4.4_Ensure_interactive_boot_is_not_enabled" do
+  title "Ensure interactive boot is not enabled"
+  desc  "
+    Interactive boot allows console users to interactively select which services start on boot. Not all distributions support this capability.
+    
+    
+    
+    The PROMPT_FOR_CONFIRM option provides console users the ability to interactively boot the system and select which services to start on boot .
+    
+    Rationale: Turn off the PROMPT_FOR_CONFIRMoption on the console to prevent console users from potentially overriding established security settings.
+  "
+  impact 0.0
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.5.1_Ensure_core_dumps_are_restricted" do
@@ -515,7 +601,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.5.1_Ensure_core_dumps_are_restri
   desc  "
     A core dump is the memory of an executable program. It is generally used to determine why a program aborted. It can also be used to glean confidential information from a core file. The system provides the ability to set a soft limit for core dumps, but this can be overridden by the user.
     
-    Rationale: Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5) ). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core.
+    Rationale: Setting a hard limit on core dumps prevents users from overriding the soft variable. If core dumps are required, consider setting limits for user groups (see limits.conf(5)). In addition, setting the fs.suid_dumpable variable to 0 will prevent setuid programs from dumping core.
   "
   impact 1.0
   describe.one do
@@ -543,17 +629,18 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.5.2_Ensure_XDNX_support_is_enabl
     
     Rationale: Enabling any feature that can protect against buffer overflow attacks enhances the security of the system.
   "
-  impact 1.0
-  flags = parse_config_file('/proc/cpuinfo', assignment_regex: /^([^:]*?)\s+:\s+(.*?)$/).flags
-    flags ||= ''
-    flags = flags.split(' ')
-    describe.one do
-      describe '/proc/cpuinfo' do
-        it 'Flags should include NX' do
-          expect(flags).to include('nx')
-        end
+  impact 0.0
+  a = command("dmesg | grep \"NX [(]Execute Disable[)] protection: active\"").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/.+/) }
       end
     end
+  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.5.3_Ensure_address_space_layout_randomization_ASLR_is_enabled" do
@@ -575,7 +662,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_1.5.4_Ensure_prelink_is_disabled" do
   title "Ensure prelink is disabled"
   desc  "
-    prelinkis a program that modifies ELF shared libraries and ELF dynamically linked binaries in such a way that the time needed for the dynamic linker to perform relocations at startup significantly decreases.
+    prelink is a program that modifies ELF shared libraries and ELF dynamically linked binaries in such a way that the time needed for the dynamic linker to perform relocations at startup significantly decreases.
     
     Rationale: The prelinking feature can interfere with the operation of AIDE, because it changes binaries. Prelinking can also increase the vulnerability of the system if a malicious user is able to compromise a common library such as libc.
   "
@@ -590,9 +677,16 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.1_Ensure_message_of_the_day_
   desc  "
     The contents of the /etc/motd file are displayed to users after login and function as a message of the day for authenticated users.
     
-    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version
     
-    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in.
+    
+    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information:
+    
+    \\m - machine architecture
+    \\r - operating system release
+    \\s - operating system name
+    \\v - operating system version
+    
+    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \"uname -a\" command once they have logged in.
   "
   impact 1.0
   describe file("/etc/motd") do
@@ -605,11 +699,20 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.2_Ensure_local_login_warning
   desc  "
     The contents of the /etc/issue file are displayed to users prior to login for local terminals.
     
-    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version
     
-    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in.
+    
+    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information:
+    
+    
+    
+    \\m- machine architecture
+    \\r- operating system release
+    \\s- operating system name
+    \\v- operating system version
+    
+    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \"uname -a\" command once they have logged in.
   "
-  impact 1.0
+  impact 0.0
   describe file("/etc/issue") do
     its("content") { should_not match(/(\\v|\\r|\\m|\\s)/) }
   end
@@ -620,11 +723,16 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.3_Ensure_remote_login_warnin
   desc  "
     The contents of the /etc/issue.net file are displayed to users prior to login for remote connections from configured services.
     
-    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information: \\m - machine architecture \\r - operating system release \\s - operating system name \\v - operating system version
+    Unix-based systems have typically displayed information about the OS release and patch level upon logging in to the system. This information can be useful to developers who are developing software for a particular OS platform. If mingetty(8) supports the following options, they display operating system information:
     
-    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \" uname -a \" command once they have logged in.
+    \\m- machine architecture
+    \\r- operating system release
+    \\s- operating system name
+    \\v- operating system version
+    
+    Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place. Displaying OS and patch level information in login banners also has the side effect of providing detailed system information to attackers attempting to target specific exploits of a system. Authorized users can easily get this information by running the \"uname -a\" command once they have logged in.
   "
-  impact 1.0
+  impact 0.0
   describe file("/etc/issue.net") do
     its("content") { should_not match(/(\\v|\\r|\\m|\\s)/) }
   end
@@ -637,22 +745,50 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.4_Ensure_permissions_on_etcm
     
     Rationale: If the /etc/motd file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information.
   "
-  impact 1.0
+  impact 0.0
   describe file("/etc/motd") do
     it { should exist }
+  end
+  describe file("/etc/motd") do
     it { should_not be_executable.by "group" }
+  end
+  describe file("/etc/motd") do
     it { should be_readable.by "group" }
+  end
+  describe file("/etc/motd") do
     its("gid") { should cmp 0 }
+  end
+  describe file("/etc/motd") do
     it { should_not be_writable.by "group" }
+  end
+  describe file("/etc/motd") do
     it { should_not be_executable.by "other" }
+  end
+  describe file("/etc/motd") do
     it { should be_readable.by "other" }
+  end
+  describe file("/etc/motd") do
     it { should_not be_writable.by "other" }
-    it { should_not be_setgid }
-    it { should_not be_sticky }
-    it { should_not be_setuid }
+  end
+  describe file("/etc/motd") do
+    its("sgid") { should equal false }
+  end
+  describe file("/etc/motd") do
+    its("sticky") { should equal false }
+  end
+  describe file("/etc/motd") do
+    its("suid") { should equal false }
+  end
+  describe file("/etc/motd") do
     it { should_not be_executable.by "owner" }
+  end
+  describe file("/etc/motd") do
     it { should be_readable.by "owner" }
+  end
+  describe file("/etc/motd") do
     its("uid") { should cmp 0 }
+  end
+  describe file("/etc/motd") do
     it { should be_writable.by "owner" }
   end
 end
@@ -690,13 +826,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.5_Ensure_permissions_on_etci
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/issue") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/issue") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/issue") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/issue") do
     it { should_not be_executable.by "owner" }
@@ -719,22 +855,50 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.1.6_Ensure_permissions_on_etci
     
     Rationale: If the /etc/issue.net file does not have the correct ownership it could be modified by unauthorized users with incorrect or misleading information.
   "
-  impact 1.0
+  impact 0.0
   describe file("/etc/issue.net") do
     it { should exist }
+  end
+  describe file("/etc/issue.net") do
     it { should_not be_executable.by "group" }
+  end
+  describe file("/etc/issue.net") do
     it { should be_readable.by "group" }
+  end
+  describe file("/etc/issue.net") do
     its("gid") { should cmp 0 }
+  end
+  describe file("/etc/issue.net") do
     it { should_not be_writable.by "group" }
+  end
+  describe file("/etc/issue.net") do
     it { should_not be_executable.by "other" }
+  end
+  describe file("/etc/issue.net") do
     it { should be_readable.by "other" }
+  end
+  describe file("/etc/issue.net") do
     it { should_not be_writable.by "other" }
-    it { should_not be_setgid }
-    it { should_not be_sticky }
-    it { should_not be_setuid }
+  end
+  describe file("/etc/issue.net") do
+    its("sgid") { should equal false }
+  end
+  describe file("/etc/issue.net") do
+    its("sticky") { should equal false }
+  end
+  describe file("/etc/issue.net") do
+    its("suid") { should equal false }
+  end
+  describe file("/etc/issue.net") do
     it { should_not be_executable.by "owner" }
+  end
+  describe file("/etc/issue.net") do
     it { should be_readable.by "owner" }
+  end
+  describe file("/etc/issue.net") do
     its("uid") { should cmp 0 }
+  end
+  describe file("/etc/issue.net") do
     it { should be_writable.by "owner" }
   end
 end
@@ -743,40 +907,46 @@ control "xccdf_org.cisecurity.benchmarks_rule_1.7.2_Ensure_GDM_login_banner_is_c
   title "Ensure GDM login banner is configured"
   desc  "
     GDM is the GNOME Display Manager which handles graphical login for GNOME based systems.
+    
     Rationale: Warning messages inform users who are attempting to login to the system of their legal status regarding the system and must include the name of the organization that owns the system and any monitoring policies that are in place.
   "
   impact 1.0
-  only_if { package('gdm').installed? }
-  options = {
-    assignment_regex: /^\s*([^:]*?)\s*:\s*(.*?)\s*$/
-  }
-  describe parse_config_file('/etc/dconf/db/gdm.d/01-banner-message').params['org/gnome/login-screen'] do
-    its('banner-message-enable') { should eq 'true' }
-    its('banner-message-text') { should_not eq '' }
-  end
-  describe parse_config_file('/etc/dconf/profile/gdm', options) do
-    its('user-db') { should eq 'user' }
-    its('system-db') { should eq 'gdm' }
-    its('file-db') { should eq '/usr/share/gdm/greeter-dconf-defaults' }
+  describe.one do
+    describe file("/etc/dconf/profile/gdm") do
+      its("content") { should match(/^user-db:user$/) }
+    end
+    describe file("/etc/dconf/profile/gdm") do
+      its("content") { should match(/^system-db:gdm$/) }
+    end
+    describe file("/etc/dconf/profile/gdm") do
+      its("content") { should match(/^file-db:\/usr\/share\/gdm\/greeter-dconf-defaults$/) }
+    end
+    describe file("/etc/dconf/db/gdm.d/01-banner-message") do
+      its("content") { should match(/^banner-message-enable=true$/) }
+    end
+    describe file("/etc/dconf/db/gdm.d/01-banner-message") do
+      its("content") { should match(/^banner-message-text='.+'$/) }
+    end
+    describe package("gdm") do
+      it { should_not be_installed }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_1.8_Ensure_updates_patches_and_additional_security_software_are_installed" do
   title "Ensure updates, patches, and additional security software are installed"
   desc  "
-    Periodically patches are released for included software either due to security flaws or to     include additional functionality.
+    Periodically patches are released for included software either due to security flaws or to include additional functionality.
+    
     Rationale: Newer patches may contain security enhancements that would not be available through the latest full update. As a result, it is recommended that the latest software patches be used to take advantage of the latest functionality. As with any software installation, organizations need to determine if a given update meets their requirements and verify the compatibility and supportability of any additional software against the update revision that is selected.
   "
-  impact 1.0
-  describe bash('yum check-update --security') do
-    its("exit_status") { should eq 0 }
-  end
+  impact 0.0
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_2.1.1_Ensure_chargen_services_are_not_enabled" do
   title "Ensure chargen services are not enabled"
   desc  "
-    chargenis a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
+    chargen is a network service that responds with 0 to 512 ASCII characters for each connection it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
     
     Rationale: Disabling this service will reduce the remote attack surface of the system.
   "
@@ -785,11 +955,11 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.1_Ensure_chargen_services_are_
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^chargen +/) }
+    its("content") { should_not match(/^chargen\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^chargen +/) }
+      its("content") { should_not match(/^chargen\s+/) }
     end
   end
 end
@@ -806,11 +976,11 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.2_Ensure_daytime_services_are_
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^daytime +/) }
+    its("content") { should_not match(/^daytime\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^daytime +/) }
+      its("content") { should_not match(/^daytime\s+/) }
     end
   end
 end
@@ -818,7 +988,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_2.1.3_Ensure_discard_services_are_not_enabled" do
   title "Ensure discard services are not enabled"
   desc  "
-    discardis a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
+    discard is a network service that simply discards all data it receives. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
     
     Rationale: Disabling this service will reduce the remote attack surface of the system.
   "
@@ -827,11 +997,11 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.3_Ensure_discard_services_are_
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^discard +/) }
+    its("content") { should_not match(/^discard\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^discard +/) }
+      its("content") { should_not match(/^discard\s+/) }
     end
   end
 end
@@ -839,7 +1009,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_2.1.4_Ensure_echo_services_are_not_enabled" do
   title "Ensure echo services are not enabled"
   desc  "
-    echois a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
+    echo is a network service that responds to clients with the data sent to it by the client. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
     
     Rationale: Disabling this service will reduce the remote attack surface of the system.
   "
@@ -848,11 +1018,11 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.4_Ensure_echo_services_are_not
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^echo +/) }
+    its("content") { should_not match(/^echo\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^echo +/) }
+      its("content") { should_not match(/^echo\s+/) }
     end
   end
 end
@@ -860,7 +1030,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_2.1.5_Ensure_time_services_are_not_enabled" do
   title "Ensure time services are not enabled"
   desc  "
-    timeis a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
+    time is a network service that responds with the server's current date and time as a 32 bit integer. This service is intended for debugging and testing purposes. It is recommended that this service be disabled.
     
     Rationale: Disabling this service will reduce the remote attack surface of the system.
   "
@@ -869,19 +1039,148 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.5_Ensure_time_services_are_not
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^time +/) }
+    its("content") { should_not match(/^time\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^time +/) }
+      its("content") { should_not match(/^time\s+/) }
     end
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_2.1.6_Ensure_tftp_server_is_not_enabled" do
+control "xccdf_org.cisecurity.benchmarks_rule_2.1.6_Ensure_rsh_server_is_not_enabled" do
+  title "Ensure rsh server is not enabled"
+  desc  "
+    The Berkeley rsh-server (rsh, rlogin, rexec) package contains legacy services that exchange credentials in clear-text.
+    
+    Rationale: These legacy services contain numerous security exposures and have been replaced with the more secure SSH package.
+  "
+  impact 1.0
+  describe xinetd_conf.services("shell").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^shell\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^shell\s+/) }
+    end
+  end
+  describe xinetd_conf.services("login").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^login\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^login\s+/) }
+    end
+  end
+  describe xinetd_conf.services("exec").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^exec\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^exec\s+/) }
+    end
+  end
+  describe xinetd_conf.services("rsh").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^rsh\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^rsh\s+/) }
+    end
+  end
+  describe xinetd_conf.services("rlogin").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^rlogin\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^rlogin\s+/) }
+    end
+  end
+  describe xinetd_conf.services("resec").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^resec\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^resec\s+/) }
+    end
+  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_2.1.7_Ensure_talk_server_is_not_enabled" do
+  title "Ensure talk server is not enabled"
+  desc  "
+    The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default.
+    
+    Rationale: The software presents a security risk as it uses unencrypted protocols for communication.
+  "
+  impact 1.0
+  describe xinetd_conf.services("talk").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^talk\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^talk\s+/) }
+    end
+  end
+  describe xinetd_conf.services("ntalk").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^ntalk\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^ntalk\s+/) }
+    end
+  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_2.1.8_Ensure_telnet_server_is_not_enabled" do
+  title "Ensure telnet server is not enabled"
+  desc  "
+    The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol.
+    
+    Rationale: The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security.
+  "
+  impact 1.0
+  describe xinetd_conf.services("telnet").protocols(/.*/) do
+    it { should be_disabled }
+  end
+  describe file("/etc/inetd.conf") do
+    its("content") { should_not match(/^telnet\s+/) }
+  end
+  command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
+    describe file(entry) do
+      its("content") { should_not match(/^telnet\s+/) }
+    end
+  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_2.1.9_Ensure_tftp_server_is_not_enabled" do
   title "Ensure tftp server is not enabled"
   desc  "
-    Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server.
+    Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The packages tftp and atftp are both used to define and support a TFTP server.
     
     Rationale: TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services.
   "
@@ -890,25 +1189,31 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.1.6_Ensure_tftp_server_is_not_en
     it { should be_disabled }
   end
   describe file("/etc/inetd.conf") do
-    its("content") { should_not match(/^tftp +/) }
+    its("content") { should_not match(/^tftp\s+/) }
   end
   command("find /etc/inetd.d -type f -regex .\\*/.\\+").stdout.split.each do |entry|
     describe file(entry) do
-      its("content") { should_not match(/^tftp +/) }
+      its("content") { should_not match(/^tftp\s+/) }
     end
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_2.1.7_Ensure_xinetd_is_not_enabled" do
+control "xccdf_org.cisecurity.benchmarks_rule_2.1.10_Ensure_xinetd_is_not_enabled" do
   title "Ensure xinetd is not enabled"
   desc  "
-    The eXtended InterNET Daemon ( xinetd ) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests.
+    The eXtended InterNET Daemon (xinetd) is an open source super daemon that replaced the original inetd daemon. The xinetd daemon listens for well known services and dispatches the appropriate daemon to properly respond to service requests.
     
     Rationale: If there are no xinetd services required, it is recommended that the daemon be disabled.
   "
   impact 1.0
-  describe service("xinetd") do
-    it { should_not be_enabled }
+  a = command("systemctl is-enabled xinetd.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -919,7 +1224,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.1.1_Ensure_time_synchronizatio
     
     Rationale: Time synchronization is important to support time sensitive security mechanisms like Kerberos and also ensures log files have consistent time records across the enterprise, which aids in forensic investigations.
   "
-  impact 1.0
+  impact 0.0
   describe.one do
     describe package("ntp") do
       it { should be_installed }
@@ -935,26 +1240,28 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.1.2_Ensure_ntp_is_configured" 
   desc  "
     ntp is a daemon which implements the Network Time Protocol (NTP). It is designed to synchronize system clocks across a variety of systems and use a source that is highly accurate. More information on NTP can be found at [http://www.ntp.org](http://www.ntp.org/). ntp can be configured to be a client and/or a server.
     
+    
+    
     This recommendation only applies if ntp is in use on the system.
     
     Rationale: If ntp is in use on the system proper configuration is vital to ensuring time synchronization is working properly.
   "
   impact 1.0
-  only_if { package('ntp').installed? }
-  describe file('/etc/ntp.conf') do
-    it { should exist }
-    its('content') { should match(/^\s*restrict\s+(-4\s+)?default(?=[^#]*\s+kod)(?=[^#]*\s+nomodify)(?=[^#]*\s+notrap)(?=[^#]*\s+nopeer)(?=[^#]*\s+noquery)(\s+kod|\s+nomodify|\s+notrap|\s+nopeer|\s+noquery)*\s*(?:#.*)?$/) }
-    its('content') { should match(/^\s*restrict\s+-6\s+default(?=[^#]*\s+kod)(?=[^#]*\s+nomodify)(?=[^#]*\s+notrap)(?=[^#]*\s+nopeer)(?=[^#]*\s+noquery)(\s+kod|\s+nomodify|\s+notrap|\s+nopeer|\s+noquery)*\s*(?:#.*)?$/) }
-    its('content') { should match(/^\s*(server|pool)\s+\S+/) }
-  end
   describe.one do
-    describe file("/etc/sysconfig/ntpd") do
-      it { should exist }
-      its('content') { should match(/^\s*OPTIONS="[^"]*-u ntp:ntp[^"]*"\s*(?:#.*)?$/) }
+    describe file("/etc/ntp.conf") do
+      its("content") { should match(/^\s*restrict\s+(-4\s+)?default(?=[^#]*\s+kod)(?=[^#]*\s+nomodify)(?=[^#]*\s+notrap)(?=[^#]*\s+nopeer)(?=[^#]*\s+noquery)(\s+kod|\s+nomodify|\s+notrap|\s+nopeer|\s+noquery)*\s*(?:#.*)?$/) }
     end
-    describe file("/usr/lib/systemd/ntpd.service") do
-      it { should exist }
-      its('content') { should match(/^\s*ExecStart\s*=\s*\/usr\/sbin\/ntpd\s+(\S+\s+)*-u\s+ntp:ntp(\s+|$)/) }
+    describe file("/etc/ntp.conf") do
+      its("content") { should match(/^\s*restrict\s+-6\s+default(?=[^#]*\s+kod)(?=[^#]*\s+nomodify)(?=[^#]*\s+notrap)(?=[^#]*\s+nopeer)(?=[^#]*\s+noquery)(\s+kod|\s+nomodify|\s+notrap|\s+nopeer|\s+noquery)*\s*(?:#.*)?$/) }
+    end
+    describe file("/etc/ntp.conf") do
+      its("content") { should match(/^\s*server\s+\S+/) }
+    end
+    describe file("/etc/init.d/ntp") do
+      its("content") { should match(/^\s*RUNASUSER\s*=\s*ntp\s*(?:#.*)?$/) }
+    end
+    describe package("ntp") do
+      it { should_not be_installed }
     end
   end
 end
@@ -966,22 +1273,23 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.1.3_Ensure_chrony_is_configure
     
     Rationale: If chrony is in use on the system proper configuration is vital to ensuring time synchronization is working properly.
     
+    
+    
     This recommendation only applies if chrony is in use on the system.
   "
   impact 1.0
-  describe 
-  only_if { package('chrony').installed? }
-  describe file("/etc/chrony.conf") do
-    its("content") { should match(/^\s*server\s+\S+/) }
-  end
-  opts = ini('/etc/sysconfig/ntpd').params['OPTIONS'] || []
-  if opts.include?('-u chrony')
-    describe ini('/etc/sysconfig/chronyd') do
-      its('OPTIONS') { should include '-u chrony' }
+  describe.one do
+    describe file("/etc/chrony/chrony.conf") do
+      its("content") { should match(/^\s*server\s+\S+/) }
     end
-  else
-    describe ini('/usr/lib/systemd/system/chronyd.service') do
-      its(['Service', 'ExecStart']) { should include '-u chrony' }
+    processes(/^chronyd/).where { pid > 0 }.entries.each do |entry|
+      a = passwd.where { user == "_chrony" }.uids.first
+      describe user(entry.user) do
+        its("uid") { should cmp a }
+      end
+    end
+    describe package("chrony") do
+      it { should_not be_installed }
     end
   end
 end
@@ -994,11 +1302,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.2_Ensure_X_Window_System_is_no
     Rationale: Unless your organization specifically requires graphical login access via X Windows, remove it to reduce the potential attack surface.
   "
   impact 1.0
-  describe packages(/^xorg-x11.*/) do
-    its("entries") { should be_empty }
-  end
   describe packages(/^xserver-xorg.*/) do
-    its("entries") { should be_empty }
+    its("names") { should be_empty }
   end
 end
 
@@ -1007,12 +1312,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.3_Ensure_Avahi_Server_is_not_e
   desc  "
     Avahi is a free zeroconf implementation, including a system for multicast DNS/DNS-SD service discovery. Avahi allows programs to publish and discover services and hosts running on a local network with no specific configuration. For example, a user can plug a computer into a network and Avahi automatically finds printers to print to, files to look at and people to talk to, as well as network services running on the machine.
     
-    Rationale: Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attack surface.
+    Rationale: Automatic discovery of network services is not normally required for system functionality. It is recommended to disable the service to reduce the potential attach surface.
   "
   impact 1.0
-  describe service('avahi-daemon') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled avahi-daemon.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1024,9 +1334,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.4_Ensure_CUPS_is_not_enabled" 
     Rationale: If the system does not need to print jobs or accept print jobs from other systems, it is recommended that CUPS be disabled to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('cups') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled cups.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1035,12 +1350,26 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.5_Ensure_DHCP_Server_is_not_en
   desc  "
     The Dynamic Host Configuration Protocol (DHCP) is a service that allows machines to be dynamically assigned IP addresses.
     
-    Rationale: Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be disabled to reduce the potential attack surface.
+    Rationale: Unless a system is specifically set up to act as a DHCP server, it is recommended that this service be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('dhcpd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled isc-dhcp-server.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
+  end
+  a = command("systemctl is-enabled isc-dhcp-server6.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1052,9 +1381,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.6_Ensure_LDAP_server_is_not_en
     Rationale: If the system will not need to act as an LDAP server, it is recommended that the software be disabled to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('slapd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled slapd.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1066,17 +1400,23 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.7_Ensure_NFS_and_RPC_are_not_e
     Rationale: If the system does not export NFS shares or act as an NFS client, it is recommended that these services be disabled to reduce remote attack surface.
   "
   impact 1.0
-  describe service('nfs') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled nfs-kernel-server.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
   end
-  describe service('nfs-server') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
-  describe service("rpcbind") do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled rpcbind.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1085,12 +1425,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.8_Ensure_DNS_Server_is_not_ena
   desc  "
     The Domain Name System (DNS) is a hierarchical naming system that maps names to IP addresses for computers, services and other resources connected to a network.
     
-    Rationale: Unless a system is specifically designated to act as a DNS server, it is recommended that the service be disabled to reduce the potential attack surface.
+    Rationale: Unless a system is specifically designated to act as a DNS server, it is recommended that the package be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('named') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled bind9.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1099,12 +1444,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.9_Ensure_FTP_Server_is_not_ena
   desc  "
     The File Transfer Protocol (FTP) provides networked computers with the ability to transfer files.
     
-    Rationale: FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the service be disabled to reduce the potential attack surface.
+    Rationale: FTP does not protect the confidentiality of data or authentication credentials. It is recommended sftp be used if file transfer is required. Unless there is a need to run the system as a FTP server (for example, to allow anonymous downloads), it is recommended that the package be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('vsftpd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled vsftpd.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1113,12 +1463,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.10_Ensure_HTTP_server_is_not_e
   desc  "
     HTTP or web servers provide the ability to host web site content.
     
-    Rationale: Unless there is a need to run the system as a web server, it is recommended that the service be disabled to reduce the potential attack surface.
+    Rationale: Unless there is a need to run the system as a web server, it is recommended that the package be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('httpd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled apache2.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1127,12 +1482,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.11_Ensure_IMAP_and_POP3_server
   desc  "
     dovecot is an open source IMAP and POP3 server for Linux based systems.
     
-    Rationale: Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be disabled to reduce the potential attack surface.
+    Rationale: Unless POP3 and/or IMAP servers are to be provided by this system, it is recommended that the service be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('dovecot') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled dovecot.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1141,12 +1501,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.12_Ensure_Samba_is_not_enabled
   desc  "
     The Samba daemon allows system administrators to configure their Linux systems to share file systems and directories with Windows desktops. Samba will advertise the file systems and directories via the Small Message Block (SMB) protocol. Windows desktop users will be able to mount these directories and file systems as letter drives on their systems.
     
-    Rationale: If there is no need to mount directories and file systems to Windows systems, then this service can be disabled to reduce the potential attack surface.
+    Rationale: If there is no need to mount directories and file systems to Windows systems, then this service can be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('smb') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled smbd.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1155,12 +1520,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.13_Ensure_HTTP_Proxy_Server_is
   desc  "
     Squid is a standard proxy server used in many distributions and environments.
     
-    Rationale: If there is no need for a proxy server, it is recommended that the squid proxy be disabled to reduce the potential attack surface.
+    Rationale: If there is no need for a proxy server, it is recommended that the squid proxy be deleted to reduce the potential attack surface.
   "
   impact 1.0
-  describe service('squid') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled squid.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1169,12 +1539,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.14_Ensure_SNMP_Server_is_not_e
   desc  "
     The Simple Network Management Protocol (SNMP) server is used to listen for SNMP commands from an SNMP management system, execute the commands or collect the information and then send results back to the requesting system.
     
-    Rationale: The SNMP server can communicate using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used. If SNMP is required the server should be configured to disallow SNMP v1.
+    Rationale: The SNMP server communicates using SNMP v1, which transmits data in the clear and does not require authentication to execute commands. Unless absolutely necessary, it is recommended that the SNMP service not be used.
   "
   impact 1.0
-  describe service('snmpd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled snmpd.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
@@ -1191,71 +1566,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.15_Ensure_mail_transfer_agent_
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.16_Ensure_NIS_Server_is_not_enabled" do
-  title "Ensure NIS Server is not enabled"
-  desc  "
-    The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files.
-    
-    Rationale: The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used
-  "
-  impact 1.0
-  describe service('ypserv') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.17_Ensure_rsh_server_is_not_enabled" do
-  title "Ensure rsh server is not enabled"
-  desc  "
-    The Berkeley rsh-server ( rsh , rlogin , rexec ) package contains legacy services that exchange credentials in clear-text.
-    
-    Rationale: These legacy services contain numerous security exposures and have been replaced with the more secure SSH package.
-  "
-  impact 1.0
-  describe service('rsh.socket') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-  describe service('rlogin.socket') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-  describe service('rexec.socket') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.18_Ensure_telnet_server_is_not_enabled" do
-  title "Ensure telnet server is not enabled"
-  desc  "
-    The telnet-server package contains the telnet daemon, which accepts connections from users from other systems via the telnet protocol.
-    
-    Rationale: The telnet protocol is insecure and unencrypted. The use of an unencrypted transmission medium could allow a user with access to sniff network traffic the ability to steal credentials. The ssh package provides an encrypted session and stronger security.
-  "
-  impact 1.0
-  describe service('telnet.socket') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.19_Ensure_tftp_server_is_not_enabled" do
-  title "Ensure tftp server is not enabled"
-  desc  "
-    Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol, typically used to automatically transfer configuration or boot machines from a boot server. The package tftp-server is used to define and support a TFTP server.
-    
-    Rationale: TFTP does not support authentication nor does it ensure the confidentiality or integrity of data. It is recommended that TFTP be removed, unless there is a specific need for TFTP. In that case, extreme caution must be used when configuring the services.
-  "
-  impact 1.0
-  describe service('tftp.socket') do
-    it { should_not be_enabled }
-    it { should_not be_running }
-  end
-end
-
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.20_Ensure_rsync_service_is_not_enabled" do
+control "xccdf_org.cisecurity.benchmarks_rule_2.2.16_Ensure_rsync_service_is_not_enabled" do
   title "Ensure rsync service is not enabled"
   desc  "
     The rsyncd service can be used to synchronize files between systems over network links.
@@ -1263,35 +1574,45 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.2.20_Ensure_rsync_service_is_not
     Rationale: The rsyncd service presents a security risk as it uses unencrypted protocols for communication.
   "
   impact 1.0
-  describe service('rsyncd') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled rsync.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_2.2.21_Ensure_talk_server_is_not_enabled" do
-  title "Ensure talk server is not enabled"
+control "xccdf_org.cisecurity.benchmarks_rule_2.2.17_Ensure_NIS_Server_is_not_enabled" do
+  title "Ensure NIS Server is not enabled"
   desc  "
-    The talk software makes it possible for users to send and receive messages across systems through a terminal session. The talk client (allows initiate of talk sessions) is installed by default.
+    The Network Information Service (NIS) (formally known as Yellow Pages) is a client-server directory service protocol for distributing system configuration files. The NIS server is a collection of programs that allow for the distribution of configuration files.
     
-    Rationale: The software presents a security risk as it uses unencrypted protocols for communication.
+    Rationale: The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be disabled and other, more secure services be used
   "
   impact 1.0
-  describe service('ntalk') do
-    it { should_not be_enabled }
-    it { should_not be_running }
+  a = command("systemctl is-enabled nis.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_2.3.1_Ensure_NIS_Client_is_not_installed" do
   title "Ensure NIS Client is not installed"
   desc  "
-    The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client ( ypbind ) was used to bind a machine to an NIS server and receive the distributed configuration files.
+    The Network Information Service (NIS), formerly known as Yellow Pages, is a client-server directory service protocol used to distribute system configuration files. The NIS client (ypbind) was used to bind a machine to an NIS server and receive the distributed configuration files.
     
     Rationale: The NIS service is inherently an insecure system that has been vulnerable to DOS attacks, buffer overflows and has poor authentication for querying NIS maps. NIS generally has been replaced by such protocols as Lightweight Directory Access Protocol (LDAP). It is recommended that the service be removed.
   "
   impact 1.0
-  describe package("ypbind") do
+  describe package("nis") do
     it { should_not be_installed }
   end
 end
@@ -1301,10 +1622,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.3.2_Ensure_rsh_client_is_not_ins
   desc  "
     The rsh package contains the client commands for the rsh services.
     
-    Rationale: These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh , rcp and rlogin .
+    Rationale: These legacy clients contain numerous security exposures and have been replaced with the more secure SSH package. Even if the server is removed, it is best to ensure the clients are also removed to prevent users from inadvertently attempting to use these commands and therefore exposing their credentials. Note that removing the rsh package removes the clients for rsh, rcp and rlogin.
   "
   impact 1.0
-  describe package("rsh") do
+  describe package("rsh-client") do
+    it { should_not be_installed }
+  end
+  describe package("rsh-redone-client") do
     it { should_not be_installed }
   end
 end
@@ -1343,7 +1667,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_2.3.5_Ensure_LDAP_client_is_not_in
     Rationale: If the system will not need to act as an LDAP client, it is recommended that the software be removed to reduce the potential attack surface.
   "
   impact 1.0
-  describe package("openldap-clients") do
+  describe package("ldap-utils") do
     it { should_not be_installed }
   end
 end
@@ -1416,11 +1740,17 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.2.2_Ensure_ICMP_redirects_are_no
     Rationale: Attackers could use bogus ICMP redirect messages to maliciously alter the system routing tables and get them to send packets to incorrect networks and allow your system packets to be captured.
   "
   impact 1.0
-  describe kernel_parameter('net.ipv4.conf.default.accept_redirects') do
-    its('value') { should eq 0 }
+  describe kernel_parameter("net.ipv4.conf.all.accept_redirects") do
+    its("value") { should_not be_nil }
   end
-  describe kernel_parameter('net.ipv4.conf.all.accept_redirects') do
-    its('value') { should eq 0 }
+  describe kernel_parameter("net.ipv4.conf.all.accept_redirects") do
+    its("value") { should eq 0 }
+  end
+  describe kernel_parameter("net.ipv4.conf.all.accept_redirects") do
+    its("value") { should_not be_nil }
+  end
+  describe kernel_parameter("net.ipv4.conf.all.accept_redirects") do
+    its("value") { should eq 0 }
   end
 end
 
@@ -1545,13 +1875,23 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.3.1_Ensure_IPv6_router_advertise
     
     Rationale: It is recommended that systems not accept router advertisements as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes.
   "
-  impact 1.0
-  only_if { command("grep '^\\s*linux\\S\\+\\(\\s\\+\\S\\+\\)\\+\\s\\+ipv6.disable=1' /boot/grub2/grub.cfg").exit_status == 1 }
-  describe kernel_parameter('net.ipv6.conf.all.accept_ra') do
-    its('value') { should eq 0 }
-  end
-  describe kernel_parameter('net.ipv6.conf.default.accept_ra') do
-    its('value') { should eq 0 }
+  impact 0.0
+  describe.one do
+    describe kernel_parameter("net.ipv6.conf.all.accept_ra") do
+      its("value") { should_not be_nil }
+    end
+    describe kernel_parameter("net.ipv6.conf.all.accept_ra") do
+      its("value") { should eq 0 }
+    end
+    describe kernel_parameter("net.ipv6.conf.default.accept_ra") do
+      its("value") { should_not be_nil }
+    end
+    describe kernel_parameter("net.ipv6.conf.default.accept_ra") do
+      its("value") { should eq 0 }
+    end
+    describe file("/boot/grub/grub.cfg") do
+      its("content") { should match(/^\s*kernel\S+(\s+\S+)+\s+ipv6\.disable=1^\s*linux\S*(\s+\S+)+\s+ipv6\.disable=1/) }
+    end
   end
 end
 
@@ -1562,13 +1902,23 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.3.2_Ensure_IPv6_redirects_are_no
     
     Rationale: It is recommended that systems not accept ICMP redirects as they could be tricked into routing traffic to compromised machines. Setting hard routes within the system (usually a single default route to a trusted router) protects the system from bad routes.
   "
-  impact 1.0
-  only_if { command("^\s*linux\S+(\s+\S+)+\s+ipv6.disable=1' /boot/grub2/grub.cfg").exit_status == 1 }
-  describe kernel_parameter('net.ipv6.conf.all.accept_redirects') do
-    its('value') { should eq 0 }
-  end
-  describe kernel_parameter('net.ipv6.conf.default.accept_redirects') do
-    its('value') { should eq 0 }
+  impact 0.0
+  describe.one do
+    describe kernel_parameter("net.ipv6.conf.all.accept_redirects") do
+      its("value") { should_not be_nil }
+    end
+    describe kernel_parameter("net.ipv6.conf.all.accept_redirects") do
+      its("value") { should eq 0 }
+    end
+    describe kernel_parameter("net.ipv6.conf.default.accept_redirects") do
+      its("value") { should_not be_nil }
+    end
+    describe kernel_parameter("net.ipv6.conf.default.accept_redirects") do
+      its("value") { should eq 0 }
+    end
+    describe file("/boot/grub/grub.cfg") do
+      its("content") { should match(/^\s*linux\S*(\s+\S+)+\s+ipv6\.disable=1/) }
+    end
   end
 end
 
@@ -1579,9 +1929,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.3.3_Ensure_IPv6_is_disabled" do
     
     Rationale: If IPv6 is not to be used, it is recommended that it be disabled to reduce the attack surface of the system.
   "
-  impact 1.0
-  describe file("/boot/grub2/grub.cfg") do
-    its("content") { should match(/^\s*linux\S+(\s+\S+)+\s+ipv6.disable=1/) }
+  impact 0.0
+  describe file("/boot/grub/grub.cfg") do
+    its("content") { should match(/^\s*linux\S*(\s+\S+)+\s+ipv6\.disable=1/) }
   end
 end
 
@@ -1593,10 +1943,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.1_Ensure_TCP_Wrappers_is_insta
     Rationale: TCP Wrappers provide a good simple access list mechanism to services that may not have that support built in. It is recommended that all services that can support TCP Wrappers, use it.
   "
   impact 1.0
-  describe package("tcp_wrappers") do
-    it { should be_installed }
-  end
-  describe package("tcp_wrappers-libs") do
+  describe package("tcpd") do
     it { should be_installed }
   end
 end
@@ -1609,9 +1956,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.2_Ensure_etchosts.allow_is_con
     Rationale: The /etc/hosts.allow file supports access control by IP and helps ensure that only authorized systems can connect to the system.
   "
   impact 1.0
-  describe file('/etc/hosts.allow') do
+  describe file("/etc/hosts.allow") do
     it { should exist }
-    it { should be_file }
   end
 end
 
@@ -1623,10 +1969,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.3_Ensure_etchosts.deny_is_conf
     Rationale: The /etc/hosts.deny file serves as a failsafe so that any host not specified in /etc/hosts.allow is denied access to the system.
   "
   impact 1.0
-  describe file('/etc/hosts.deny') do
-    it { should exist }
-    it { should be_file }
-    its('content') { should match /^\s*ALL\:\s*ALL\s*$/}
+  describe file("/etc/hosts.deny") do
+    its("content") { should match(/^ALL: ALL/) }
   end
 end
 
@@ -1663,13 +2007,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.4_Ensure_permissions_on_etchos
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/hosts.allow") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/hosts.allow") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/hosts.allow") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/hosts.allow") do
     it { should_not be_executable.by "owner" }
@@ -1685,8 +2029,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.4_Ensure_permissions_on_etchos
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_3.4.5_Ensure_permissions_on_etchosts.deny_are_configured" do
-  title "Ensure permissions on /etc/hosts.deny are configured"
+control "xccdf_org.cisecurity.benchmarks_rule_3.4.5_Ensure_permissions_on_etchosts.deny_are_644" do
+  title "Ensure permissions on /etc/hosts.deny are 644"
   desc  "
     The /etc/hosts.deny file contains network information that is used by many system applications and therefore must be readable for these applications to operate.
     
@@ -1718,13 +2062,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.4.5_Ensure_permissions_on_etchos
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/hosts.deny") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/hosts.deny") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/hosts.deny") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/hosts.deny") do
     it { should_not be_executable.by "owner" }
@@ -1745,13 +2089,29 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.5.1_Ensure_DCCP_is_disabled" do
   desc  "
     The Datagram Congestion Control Protocol (DCCP) is a transport layer protocol that supports streaming media and telephony. DCCP provides a way to gain access to congestion control, without having to do it at the application layer, but does not provide in-sequence delivery.
     
-    Rationale: If the protocol is not required, it is recommended that the drivers not be installed to reduce the potential attack surface.
+    Rationale: If the protocol is not required, it is recommended that the drivers not be installed
+    to reduce the potential attack surface.
   "
-  impact 1.0
-  describe kernel_module('dccp') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  impact 0.0
+  a = command("modprobe -n -v dccp").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^dccp\s+/) }
+    end
   end
 end
 
@@ -1762,11 +2122,26 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.5.2_Ensure_SCTP_is_disabled" do
     
     Rationale: If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface.
   "
-  impact 1.0
-  describe kernel_module('sctp') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  impact 0.0
+  a = command("modprobe -n -v sctp").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^sctp\s+/) }
+    end
   end
 end
 
@@ -1777,11 +2152,26 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.5.3_Ensure_RDS_is_disabled" do
     
     Rationale: If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface.
   "
-  impact 1.0
-  describe kernel_module('rds') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  impact 0.0
+  a = command("modprobe -n -v rds").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^rds\s+/) }
+    end
   end
 end
 
@@ -1792,11 +2182,26 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.5.4_Ensure_TIPC_is_disabled" do
     
     Rationale: If the protocol is not being used, it is recommended that kernel module not be loaded, disabling the service to reduce the potential attack surface.
   "
-  impact 1.0
-  describe kernel_module('tipc') do
-    it { should_not be_loaded }
-    it { should be_disabled }
-    it { should be_blacklisted }
+  impact 0.0
+  a = command("modprobe -n -v tipc").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^install\s+\/bin\/true\s*$/) }
+      end
+    end
+  end
+  a = command("lsmod").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/^tipc\s+/) }
+    end
   end
 end
 
@@ -1821,13 +2226,36 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.6.2_Ensure_default_deny_firewall
     Rationale: With a default accept policy the firewall will accept any packet that is not configured to be denied. It is easier to white list acceptable usage than to black list unacceptable usage.
   "
   impact 1.0
-  %w[INPUT OUTPUT FORWARD].each do |chain|
-    describe.one do
-      describe iptables do
-        it { should have_rule("-P #{chain} DROP") }
+  a = command("iptables -L").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^Chain INPUT \(policy (DROP|REJECT)\)$/) }
       end
-      describe iptables do
-        it { should have_rule("-P #{chain} REJECT") }
+    end
+  end
+  a = command("iptables -L").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^Chain FORWARD \(policy (DROP|REJECT)\)$/) }
+      end
+    end
+  end
+  a = command("iptables -L").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^Chain OUTPUT \(policy (DROP|REJECT)\)$/) }
       end
     end
   end
@@ -1841,10 +2269,38 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.6.3_Ensure_loopback_traffic_is_c
     Rationale: Loopback traffic is generated between processes on machine and is typically critical to operation of the system. The loopback interface is the only place that loopback network (127.0.0.0/8) traffic should be seen, all other interfaces should ignore traffic on this network as an anti-spoofing measure.
   "
   impact 1.0
-  describe iptables do
-    it { should have_rule('-A INPUT -i lo -j ACCEPT') }
-    it { should have_rule('-A OUTPUT -o lo -j ACCEPT') }
-    it { should have_rule('-A INPUT -s 127.0.0.0/8 -j DROP') }
+  a = command("iptables -L INPUT -v -n").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^\s*\S+\s+\S+\s+ACCEPT\s+all\s+--\s+lo\s+\*\s+0\.0\.0\.0\/0\s+0\.0\.0\.0\/0\s*$/) }
+      end
+    end
+  end
+  a = command("iptables -L INPUT -v -n").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^\s*\S+\s+\S+\s+DROP\s+all\s+--\s+\*\s+\*\s+127\.0\.0\.0\/8\s+0\.0\.0\.0\/0\s*$/) }
+      end
+    end
+  end
+  a = command("iptables -L OUTPUT -v -n").stdout.scan(/.+/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  describe.one do
+    a.each do |entry|
+      describe entry do
+        it { should match(/^\s*\S+\s+\S+\s+ACCEPT\s+all\s+--\s+\*\s+lo\s+0\.0\.0\.0\/0\s+0\.0\.0\.0\/0\s*$/) }
+      end
+    end
   end
 end
 
@@ -1856,9 +2312,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.6.4_Ensure_outbound_and_establis
     Rationale: If rules are not in place for new outbound, and established connections all packets will be dropped by the default policy preventing network usage.
   "
   impact 0.0
-  describe 'configure outbound and established connections' do
-    skip 'Skipped because this benchmark depends on your particular site policy. You can override this control with one that meets your site policy for outbound and established connections.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_3.6.5_Ensure_firewall_rules_exist_for_all_open_ports" do
@@ -1869,27 +2322,30 @@ control "xccdf_org.cisecurity.benchmarks_rule_3.6.5_Ensure_firewall_rules_exist_
     Rationale: Without a firewall rule configured for open ports default firewall policy will drop all packets to these ports.
   "
   impact 1.0
-  port.where { protocol =~ /.*/ && port >= 0 && address =~ /^(?!127\.0\.0\.1|::1|::).*$/ }.entries.each do |entry|
-    rule_inbound = "-A INPUT -p #{entry[:protocol]} -m #{entry[:protocol]} --dport #{entry[:port]} -m state --state NEW,ESTABLISHED -j ACCEPT"
-    rule_outbound = "-A OUTPUT -p #{entry[:protocol]} -m #{entry[:protocol]} --sport #{entry[:port]} -m state --state ESTABLISHED -j ACCEPT"
-    describe iptables do
-      it { should have_rule(rule_inbound) }
-      it { should have_rule(rule_outbound) }
+  a = port.where { protocol =~ /.*/ && port >= 0 && address =~ /^(?!127\.0\.0\.1|::1).*$/ }.ports.map { |x| "\\s+dpt:" + x.to_s }.map { |x| x.to_s + "\\s+state\\s+NEW\\s*$" }
+  b = command("iptables -L INPUT -v -n").stdout
+  c = a.map { |x| b.scan(Regexp.new(x)) }
+  describe c do
+    its("length") { should be > 0 }
+  end
+  c.each do |entry|
+    describe entry do
+      it { should match(/.+/) }
     end
+  end
+  describe "SCAP oval resource shellcommand_test could not be loaded: SCAP::OVAL::ShellCommandTest cannot find node reference: state#state_ref" do
+    skip "SCAP oval resource shellcommand_test could not be loaded: SCAP::OVAL::ShellCommandTest cannot find node reference: state#state_ref"
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_3.7_Ensure_wireless_interfaces_are_disabled" do
   title "Ensure wireless interfaces are disabled"
   desc  "
-    Wireless networking is used when wired networks are unavailable. CentOS Linux 7 contains a wireless tool kit to allow system administrators to configure and use wireless networks.
+    Wireless networking is used when wired networks are unavailable. Ubuntu contains a wireless tool kit to allow system administrators to configure and use wireless networks.
     
     Rationale: If wireless is not to be used, wireless devices can be disabled to reduce the potential attack surface.
   "
   impact 0.0
-  describe 'disable wireless interfaces' do
-    skip 'disable all wireless interfaces, to determine wireless interfaces run iwconfig command'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.1_Ensure_rsyslog_Service_is_enabled" do
@@ -1901,11 +2357,16 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.1_Ensure_rsyslog_Service_is_
   "
   impact 1.0
   describe.one do
-    describe service('rsyslog') do
-      it { should be_running }
-      it { should be_enabled }
+    a = command("systemctl is-enabled rsyslog.service").stdout.scan(/enabled/)
+    describe a do
+      its("length") { should be > 0 }
     end
-    describe package('rsyslog') do
+    a.each do |entry|
+      describe entry do
+        it { should match(/.+/) }
+      end
+    end
+    describe package("rsyslog") do
       it { should_not be_installed }
     end
   end
@@ -1914,14 +2375,11 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.2_Ensure_logging_is_configured" do
   title "Ensure logging is configured"
   desc  "
-    The /etc/rsyslog.conf and /etc/rsyslog.d/*.conf files specifies rules for logging and which files are to be used to log certain classes of messages.
+    The /etc/rsyslog.conf file specifies rules for logging and which files are to be used to log certain classes of messages.
     
     Rationale: A great deal of important security-related information is sent via rsyslog (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
   "
   impact 0.0
-  describe 'Ensure logging' do
-     skip 'Review the contents of the /etc/rsyslog.conf file to ensure appropriate logging is set. In addition, run the following command and verify that the log files are logging information: ls -la /var/log/'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.3_Ensure_rsyslog_default_file_permissions_configured" do
@@ -1932,15 +2390,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.3_Ensure_rsyslog_default_fil
     Rationale: It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected.
   "
   impact 1.0
-  only_if { package('rsyslog').installed? }
   describe.one do
     describe file("/etc/rsyslog.conf") do
       its("content") { should match(/^\s*\$FileCreateMode\s+0[6420][40]0\s*(\s+#.*)?$/) }
     end
-    command("find /etc/rsyslog.d/ -type f -regex .\\*/.\\*\\\\.conf").stdout.split.each do |entry|
-      describe file(entry) do
-        its("content") { should match(/^\s*\$FileCreateMode\s+0[6420][40]0\s*(\s+#.*)?$/) }
-      end
+    describe package("rsyslog") do
+      it { should_not be_installed }
     end
   end
 end
@@ -1953,15 +2408,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.4_Ensure_rsyslog_is_configur
     Rationale: Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system
   "
   impact 1.0
-  only_if { package('rsyslog').installed? }
   describe.one do
     describe file("/etc/rsyslog.conf") do
       its("content") { should match(/^\s*\*\.\*\s+@/) }
     end
-    command("find /etc/rsyslog.d/ -type f -regex .\\*/.\\*\\\\.conf").stdout.split.each do |entry|
-      describe file(entry) do
-        its("content") { should match(/^\s*\*\.\*\s+@/) }
-      end
+    describe package("rsyslog") do
+      it { should_not be_installed }
     end
   end
 end
@@ -1974,9 +2426,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.1.5_Ensure_remote_rsyslog_mess
     Rationale: The guidance in the section ensures that remote log hosts are configured to only accept rsyslog data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote rsyslog messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
   "
   impact 0.0
-  describe 'configure rsyslog to listen for log messages from remote systems' do
-    skip 'Unable to determine which remote host(s) rsyslog should accept messages from.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.1_Ensure_syslog-ng_service_is_enabled" do
@@ -1988,9 +2437,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.1_Ensure_syslog-ng_service_i
   "
   impact 1.0
   describe.one do
-    describe service('syslog-ng') do
-      it { should be_enabled }
-      it { should be_running }
+    a = command("systemctl is-enabled syslog-ng.service").stdout.scan(/enabled/)
+    describe a do
+      its("length") { should be > 0 }
+    end
+    a.each do |entry|
+      describe entry do
+        it { should match(/.+/) }
+      end
     end
     describe package("syslog-ng") do
       it { should_not be_installed }
@@ -2006,9 +2460,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.2_Ensure_logging_is_configur
     Rationale: A great deal of important security-related information is sent via syslog-ng (e.g., successful and failed su attempts, failed login attempts, root login attempts, etc.).
   "
   impact 0.0
-  describe 'syslog-ng config' do
-    skip 'Edit the log lines in the /etc/syslog-ng/syslog-ng.conf file as appropriate for your environment.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.3_Ensure_syslog-ng_default_file_permissions_configured" do
@@ -2021,7 +2472,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.3_Ensure_syslog-ng_default_f
   impact 1.0
   describe.one do
     describe file("/etc/syslog-ng/syslog-ng.conf") do
-      its("content") { should match(/^\s*options\s+{\s*(\S+;\s*)*perm\(0[6420][40]0\);\s*(\S+;\s*)*};\s*(\s+#.*)?$/) }
+      its("content") { should match(/^\s*options\s+\{\s*(\S+;\s*)*perm\(0[6420][40]0\);\s*(\S+;\s*)*\};\s*(\s+#.*)?$/) }
     end
     describe package("syslog-ng") do
       it { should_not be_installed }
@@ -2036,10 +2487,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.4_Ensure_syslog-ng_is_config
     
     Rationale: Storing log data on a remote host protects log integrity from local attacks. If an attacker gains root access on the local system, they could tamper with or remove log data that is stored on the local system
   "
-  impact 0.0
-  describe 'syslog-ng config' do
-    skip 'Configure a remote log host as appropriate for your environment.'
-  end
+  impact 1.0
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.5_Ensure_remote_syslog-ng_messages_are_only_accepted_on_designated_log_hosts" do
@@ -2050,21 +2498,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.2.5_Ensure_remote_syslog-ng_me
     Rationale: The guidance in the section ensures that remote log hosts are configured to only accept syslog-ng data from hosts within the specified domain and that those systems that are not designed to be log hosts do not accept any remote syslog-ng messages. This provides protection from spoofed log data and ensures that system administrators are reviewing reasonably complete syslog data in a central location.
   "
   impact 0.0
-  describe 'remote syslog-ng' do
-    skip 'Review the /etc/syslog-ng/syslog-ng.conf file and verify the following lines are configured appropriately on designated log hosts:
-  
-      source net{ tcp(); };
-      destination remote { file("/var/log/remote/${FULLHOST}-log"); };
-      log { source(net); destination(remote); };
-  
-    On non designated log hosts edit the /etc/syslog-ng/syslog-ng.conf file and remove or edit any sources that accept network sourced log messages.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_4.2.3_Ensure_rsyslog_or_syslog-ng_is_installed" do
   title "Ensure rsyslog or syslog-ng is installed"
   desc  "
-    The rsyslog and syslog-ng software are recommended replacements to the original syslogd daemon which provide improvements over syslogd , such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server.
+    The rsyslog and syslog-ng software are recommended replacements to the original syslogd daemon which provide improvements over syslogd, such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server.
     
     Rationale: The security enhancements of rsyslog and syslog-ng such as connection-oriented (i.e. TCP) transmission of logs, the option to log to database formats, and the encryption of log data en route to a central logging server) justify installing and configuring the package.
   "
@@ -2087,14 +2526,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.2.4_Ensure_permissions_on_all_lo
     Rationale: It is important to ensure that log files have the correct permissions to ensure that sensitive data is archived and protected.
   "
   impact 1.0
-  command('find /var/log -type f').stdout.split("\n").each do |log_file|
-    describe file(log_file) do
-      it { should_not be_writable.by('group') }
-      it { should_not be_executable.by('group') }
-      it { should_not be_readable.by('other') }
-      it { should_not be_writable.by('other') }
-      it { should_not be_executable.by('other') }
-    end
+  describe command("find /var/log -regex .\\*/.\\* \\! -perm -00037 -xdev") do
+    its("stdout") { should_not be_empty }
   end
 end
 
@@ -2106,9 +2539,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_4.3_Ensure_logrotate_is_configured
     Rationale: By keeping the log files smaller and more manageable, a system administrator can easily archive these files to another system and spend less time looking through inordinately large log files.
   "
   impact 0.0
-  describe 'Ensure logrotate' do
-    skip 'Review /etc/logrotate.conf and /etc/logrotate.d/ * and verify logs are rotated according to site policy.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.1.1_Ensure_cron_daemon_is_enabled" do
@@ -2119,9 +2549,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.1.1_Ensure_cron_daemon_is_enable
     Rationale: While there may not be user jobs that need to be run on the system, the system does have maintenance jobs that may include security monitoring that have to run, and cron is used to execute them.
   "
   impact 1.0
-  describe service('crond') do
-    it { should be_enabled }
-    it { should be_running }
+  a = command("systemctl is-enabled cron.service").stdout.scan(/enabled/)
+  describe a do
+    its("length") { should be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should match(/.+/) }
+    end
   end
 end
 
@@ -2313,7 +2748,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_5.1.7_Ensure_permissions_on_etccron.d_are_configured" do
   title "Ensure permissions on /etc/cron.d are configured"
   desc  "
-    The /etc/cron.d directory contains system cron jobs that need to run in a similar manner to the hourly, daily weekly and monthly jobs from /etc/crontab , but require more granular control as to when they run. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory.
+    The /etc/cron.d directory contains system cron jobs that need to run in a similar manner to the hourly, daily weekly and monthly jobs from /etc/crontab, but require more granular control as to when they run. The files in this directory cannot be manipulated by the crontab command, but are instead edited by system administrators using a text editor. The commands below restrict read/write and search access to user and group root, preventing regular users from accessing this directory.
     
     Rationale: Granting write access to this directory for non-privileged users could provide them the means for gaining unauthorized elevated privileges. Granting read access to this directory could give an unprivileged user insight in how to gain elevated privileges or circumvent auditing controls.
   "
@@ -2350,7 +2785,7 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_5.1.8_Ensure_atcron_is_restricted_to_authorized_users" do
   title "Ensure at/cron is restricted to authorized users"
   desc  "
-    Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow , cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs.
+    Configure /etc/cron.allow and /etc/at.allow to allow specific users to use these services. If /etc/cron.allow or /etc/at.allow do not exist, then /etc/at.deny and /etc/cron.deny are checked. Any user not specifically defined in those files is allowed to use at and cron. By removing the files, only users in /etc/cron.allow and /etc/at.allow are allowed to use at and cron. Note that even though a given user is not listed in cron.allow, cron jobs can still be run as that user. The cron.allow file only controls administrative access to the crontab command for scheduling and modifying cron jobs.
     
     Rationale: On many systems, only the system administrator is authorized to schedule cron jobs. Using the cron.allow file to control who can run cron jobs enforces this policy. It is easier to manage an allow list than a deny list. In a deny list, you could potentially add a user ID to the system and forget to add it to the deny files.
   "
@@ -2462,8 +2897,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.2_Ensure_SSH_Protocol_is_set_t
     Rationale: SSH v1 suffers from insecurities that do not affect SSH v2.
   "
   impact 1.0
-  describe sshd_config do
-    its('Protocol') { should cmp 2 }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*Protocol\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*Protocol\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "2" }
+    end
   end
 end
 
@@ -2475,8 +2915,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.3_Ensure_SSH_LogLevel_is_set_t
     Rationale: SSH provides several logging levels with varying amounts of verbosity. DEBUG is specifically **not** recommended other than strictly for debugging SSH communications since it provides so much data that it is difficult to identify important security information. INFO level is the basic level that only records login activity of SSH users. In many situations, such as Incident Response, it is important to determine when a particular user was active on a system. The logout record can eliminate those users who disconnected, which helps narrow the field.
   "
   impact 1.0
-  describe sshd_config do
-    its('LogLevel') { should eq 'INFO' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*LogLevel\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*LogLevel\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "INFO" }
+    end
   end
 end
 
@@ -2488,8 +2933,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.4_Ensure_SSH_X11_forwarding_is
     Rationale: Disable X11 forwarding unless there is an operational requirement to use X11 applications directly. There is a small risk that the remote X11 servers of users who are logged in via SSH with X11 forwarding could be compromised by other users on the X11 server. Note that even if X11 forwarding is disabled, users can always install their own forwarders.
   "
   impact 1.0
-  describe sshd_config do
-    its('X11Forwarding') { should eq 'no' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*X11Forwarding\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*X11Forwarding\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "no" }
+    end
   end
 end
 
@@ -2501,34 +2951,49 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.5_Ensure_SSH_MaxAuthTries_is_s
     Rationale: Setting the MaxAuthTries parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. While the recommended setting is 4, set the number based on site policy.
   "
   impact 1.0
-  describe sshd_config do
-    its('MaxAuthTries') { should cmp <= 4 }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*MaxAuthTries\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*MaxAuthTries\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should cmp <= 4 }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.2.6_Ensure_SSH_IgnoreRhosts_is_enabled" do
   title "Ensure SSH IgnoreRhosts is enabled"
   desc  "
-    The IgnoreRhosts parameter specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication .
+    The IgnoreRhosts parameter specifies that .rhosts and .shosts files will not be used in RhostsRSAAuthentication or HostbasedAuthentication.
     
     Rationale: Setting this parameter forces users to enter a password when authenticating with ssh.
   "
   impact 1.0
-  describe sshd_config do
-    its('IgnoreRhosts') { should eq 'yes' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*IgnoreRhosts\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*IgnoreRhosts\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "yes" }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.2.7_Ensure_SSH_HostbasedAuthentication_is_disabled" do
   title "Ensure SSH HostbasedAuthentication is disabled"
   desc  "
-    The HostbasedAuthentication parameter specifies if authentication is allowed through trusted hosts via the user of .rhosts , or /etc/hosts.equiv , along with successful public key client host authentication. This option only applies to SSH Protocol Version 2.
+    The HostbasedAuthentication parameter specifies if authentication is allowed through trusted hosts via the user of .rhosts, or /etc/hosts.equiv, along with successful public key client host authentication. This option only applies to SSH Protocol Version 2.
     
-    Rationale: Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf , disabling the ability to use .rhosts files in SSH provides an additional layer of protection .
+    Rationale: Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, disabling the ability to use .rhosts files in SSH provides an additional layer of protection .
   "
   impact 1.0
-  describe sshd_config do
-    its('HostbasedAuthentication') { should eq 'no' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*HostbasedAuthentication\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*HostbasedAuthentication\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "no" }
+    end
   end
 end
 
@@ -2537,11 +3002,16 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.8_Ensure_SSH_root_login_is_dis
   desc  "
     The PermitRootLogin parameter specifies if the root user can log in using ssh(1). The default is no.
     
-    Rationale: Disallowing root logins over SSH requires system admins to authenticate using their own individual account, then escalating to root via sudo or su . This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident
+    Rationale: Disallowing root logins over SSH requires system admins to authenticate using their own individual account, then escalating to root via sudo or su. This in turn limits opportunity for non-repudiation and provides a clear audit trail in the event of a security incident
   "
   impact 1.0
-  describe sshd_config do
-    its('PermitRootLogin') { should eq 'no' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*PermitRootLogin\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*PermitRootLogin\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "no" }
+    end
   end
 end
 
@@ -2553,8 +3023,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.9_Ensure_SSH_PermitEmptyPasswo
     Rationale: Disallowing remote shell access to accounts that have an empty password reduces the probability of unauthorized access to the system
   "
   impact 1.0
-  describe sshd_config do
-    its('PermitEmptyPasswords') { should eq 'no' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*PermitEmptyPasswords\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*PermitEmptyPasswords\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "no" }
+    end
   end
 end
 
@@ -2566,8 +3041,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.10_Ensure_SSH_PermitUserEnviro
     Rationale: Permitting users the ability to set environment variables through the SSH daemon could potentially allow users to bypass security controls (e.g. setting an execution path that has ssh executing trojan'd programs)
   "
   impact 1.0
-  describe sshd_config do
-    its('PermitUserEnvironment') { should eq 'no' }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*PermitUserEnvironment\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*PermitUserEnvironment\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should eq "no" }
+    end
   end
 end
 
@@ -2579,8 +3059,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.11_Ensure_only_approved_MAC_al
     Rationale: MD5 and 96-bit MAC algorithms are considered weak and have been shown to increase exploitability in SSH downgrade attacks. Weak algorithms continue to have a great deal of attention as a weak spot that can be exploited with expanded computing power. An attacker that breaks the algorithm could take advantage of a MiTM position to decrypt the SSH tunnel and capture credentials and information
   "
   impact 1.0
-  describe sshd_config do
-    its('MACs') { should match /^((hmac-sha2-512-etm@openssh\.com|hmac-sha2-256-etm@openssh\.com|umac-128-etm@openssh\.com|hmac-sha2-512|hmac-sha2-256|umac-128@openssh\.com|curve25519-sha256@libssh\.org|diffie-hellman-group-exchange-sha256),)*(hmac-sha2-512-etm@openssh\.com|hmac-sha2-256-etm@openssh\.com|umac-128-etm@openssh\.com|hmac-sha2-512|hmac-sha2-256|umac-128@openssh\.com|curve25519-sha256@libssh\.org|diffie-hellman-group-exchange-sha256)$/ }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*MACs\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*MACs\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should match(/^((hmac-sha2-512-etm@openssh\.com|hmac-sha2-256-etm@openssh\.com|umac-128-etm@openssh\.com|hmac-sha2-512|hmac-sha2-256|umac-128@openssh\.com|curve25519-sha256@libssh\.org|diffie-hellman-group-exchange-sha256),)*(hmac-sha2-512-etm@openssh\.com|hmac-sha2-256-etm@openssh\.com|umac-128-etm@openssh\.com|hmac-sha2-512|hmac-sha2-256|umac-128@openssh\.com)$/) }
+    end
   end
 end
 
@@ -2594,10 +3079,21 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.12_Ensure_SSH_Idle_Timeout_Int
     While the recommended setting is 300 seconds (5 minutes), set this timeout value based on site policy. The recommended setting for ClientAliveCountMax is 0. In this case, the client session will be terminated after 5 minutes of idle time and no keepalive messages will be sent.
   "
   impact 1.0
-  describe sshd_config do
-    its('ClientAliveInterval') { should cmp <=  300 }
-    its('ClientAliveInterval') { should cmp > 0 }
-    its('ClientAliveCountMax') { should cmp <= 3 }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*ClientAliveInterval\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*ClientAliveInterval\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should cmp <= 300 }
+    end
+  end
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*ClientAliveCountMax\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*ClientAliveCountMax\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should cmp <= 3 }
+    end
   end
 end
 
@@ -2609,24 +3105,36 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.13_Ensure_SSH_LoginGraceTime_i
     Rationale: Setting the LoginGraceTime parameter to a low number will minimize the risk of successful brute force attacks to the SSH server. It will also limit the number of concurrent unauthenticated connections While the recommended setting is 60 seconds (1 Minute), set the number based on site policy.
   "
   impact 1.0
-  describe sshd_config do
-    its('LoginGraceTime') { should cmp <= 60 }
-    its('LoginGraceTime') { should cmp > 0 }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*LoginGraceTime\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*LoginGraceTime\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should cmp <= 60 }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.2.14_Ensure_SSH_access_is_limited" do
   title "Ensure SSH access is limited"
   desc  "
-    There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged: AllowUsers
+    There are several options available to limit which users and group can access the system via SSH. It is recommended that at least one of the following options be leveraged:
     
-    The AllowUsers variable gives the system administrator the option of allowing specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by only allowing the allowed users to log in from a particular host, the entry can be specified in the form of user@host. AllowGroups
+    AllowUsers
     
-    The AllowGroups variable gives the system administrator the option of allowing specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable. DenyUsers
+    The AllowUsers variable gives the system administrator the option of allowing specific users to ssh into the system. The list consists of comma separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by only allowing the allowed users to log in from a particular host, the entry can be specified in the form of user@host.
     
-    The DenyUsers variable gives the system administrator the option of denying specific users to ssh into the system. The list consists of space separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by specifically denying a user's access from a particular host, the entry can be specified in the form of user@host. DenyGroups
+    AllowGroups
     
-    The DenyGroups variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of space separated group names. Numeric group IDs are not recognized with this variable.
+    The AllowGroups variable gives the system administrator the option of allowing specific groups of users to ssh into the system. The list consists of comma separated group names. Numeric group IDs are not recognized with this variable.
+    
+    DenyUsers
+    
+    The DenyUsers variable gives the system administrator the option of denying specific users to ssh into the system. The list consists of comma separated user names. Numeric user IDs are not recognized with this variable. If a system administrator wants to restrict user access further by specifically denying a user's access from a particular host, the entry can be specified in the form of user@host.
+    
+    DenyGroups
+    
+    The DenyGroups variable gives the system administrator the option of denying specific groups of users to ssh into the system. The list consists of comma separated group names. Numeric group IDs are not recognized with this variable.
     
     Rationale: Restricting which users can remotely access the system via SSH will help ensure that only authorized users access the system.
   "
@@ -2644,38 +3152,57 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.2.15_Ensure_SSH_warning_banner_i
     Rationale: Banners are used to warn connecting users of the particular site's policy regarding connection. Presenting a warning message prior to the normal user login may assist the prosecution of trespassers on the computer system.
   "
   impact 1.0
-  describe sshd_config do
-    its('Banner') { should_not be_nil }
+  describe file("/etc/ssh/sshd_config") do
+    its("content") { should match(/^\s*Banner\s+(\S+)\s*(?:#.*)?$/) }
+  end
+  file("/etc/ssh/sshd_config").content.to_s.scan(/^\s*Banner\s+(\S+)\s*(?:#.*)?$/).flatten.each do |entry|
+    describe entry do
+      it { should match(/.+/) }
+    end
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.3.1_Ensure_password_creation_requirements_are_configured" do
   title "Ensure password creation requirements are configured"
   desc  "
-    The pam_pwquality.so module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more. The following are definitions of the pam_pwquality .so options.
+    The pam_pwquality.so module checks the strength of passwords. It performs checks such as making sure a password is not a dictionary word, it is a certain length, contains a mix of characters (e.g. alphabet, numeric, other) and more. The following are definitions of the pam_pwquality.so options.
     
     * try_first_pass - retrieve the password from a previous stacked PAM module. If not available, then prompt the user for a password.
-    * retry=3 - Allow 3 tries before sending back a failure.
+    * retry=3- Allow 3 tries before sending back a failure.
     The following options are set in the /etc/security/pwquality.conf file:
     
-    * minlen = 14 - password must be 14 characters or more
-    * dcredit = -1 - provide at least one digit
-    * ucredit = -1 - provide at least one uppercase character
-    * ocredit = -1 - provide at least one special character
-    * lcredit = -1 - provide at least one lowercase character
+    * minlen=14 - password must be 14 characters or more
+    * dcredit=-1 - provide at least one digit
+    * ucredit=-1 - provide at least one uppercase character
+    * ocredit=-1 - provide at least one special character
+    * lcredit=-1 - provide at least one lowercase character
+    
+    
     The settings shown above are one possible policy. Alter these values to conform to your own organization's password policies.
     
     Rationale: Strong passwords protect systems from being hacked through brute force methods.
   "
   impact 1.0
-  describe file("/etc/pam.d/system-auth") do
+  describe file("/etc/pam.d/common-password") do
     its("content") { should match(/^\s*password\s+requisite\s+pam_pwquality\.so\s+(\S+\s+)*try_first_pass/) }
   end
-  describe file("/etc/pam.d/password-auth") do
-    its("content") { should match(/^\s*password\s+requisite\s+pam_pwquality\.so\s+(\S+\s+)*try_first_pass/) }
+  describe file("/etc/pam.d/common-password") do
+    its("content") { should match(/^\s*password\s+requisite\s+pam_pwquality\.so\s+(\S+\s+)*retry=[3210]/) }
   end
   describe file("/etc/security/pwquality.conf") do
     its("content") { should match(/^\s*minlen\s*=\s*(1[4-9]|[2-9][0-9]|[1-9][0-9][0-9]+)\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/security/pwquality.conf") do
+    its("content") { should match(/^\s*dcredit\s*=\s*-[1-9][0-9]*\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/security/pwquality.conf") do
+    its("content") { should match(/^\s*lcredit\s*=\s*-[1-9][0-9]*\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/security/pwquality.conf") do
+    its("content") { should match(/^\s*ucredit\s*=\s*-[1-9][0-9]*\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/security/pwquality.conf") do
+    its("content") { should match(/^\s*ocredit\s*=\s*-[1-9][0-9]*\s*(\s+#.*)?$/) }
   end
 end
 
@@ -2688,25 +3215,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.3.2_Ensure_lockout_for_failed_pa
     
     Rationale: Locking out user IDs after **n** unsuccessful consecutive login attempts mitigates brute force password attacks against your systems.
   "
-  impact 1.0
-  describe file("/etc/pam.d/system-auth") do
-    its("content") { should match(/^auth\s+required\s+pam_faillock\.so\s+preauth\s+audit\s+silent\s+deny=5\s+unlock_time=900$/) }
-  end
-  describe file("/etc/pam.d/system-auth") do
-    its("content") { should match(/^auth\s+\[default=die\]\s+pam_faillock\.so\s+authfail\s+audit\s+deny=5\s+unlock_time=900$/) }
-  end
-  describe file("/etc/pam.d/system-auth") do
-    its("content") { should match(/^auth\s+sufficient\s+pam_faillock\.so\s+authsucc\s+audit\s+deny=5\s+unlock_time=900$/) }
-  end
-  describe file("/etc/pam.d/password-auth") do
-    its("content") { should match(/^auth\s+required\s+pam_faillock\.so\s+preauth\s+audit\s+silent\s+deny=5\s+unlock_time=900$/) }
-  end
-  describe file("/etc/pam.d/password-auth") do
-    its("content") { should match(/^auth\s+\[default=die\]\s+pam_faillock\.so\s+authfail\s+audit\s+deny=5\s+unlock_time=900$/) }
-  end
-  describe file("/etc/pam.d/password-auth") do
-    its("content") { should match(/^auth\s+sufficient\s+pam_faillock\.so\s+authsucc\s+audit\s+deny=5\s+unlock_time=900$/) }
-  end
+  impact 0.0
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.3.3_Ensure_password_reuse_is_limited" do
@@ -2718,10 +3227,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.3.3_Ensure_password_reuse_is_lim
     
     Note that these change only apply to accounts configured on the local system.
   "
-  impact 0.0
-  tag "skip-reason": "The current test logic is not supported: https://github.com/inspec/inspec/issues/3199"
-  describe 'Ensure logrotate' do
-    skip 'Password reuse limit is set to prevent users from using their past 5 passwords.'
+  impact 1.0
+  describe file("/etc/pam.d/common-password") do
+    its("content") { should match(/^password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*remember=([56789]|1-9][0-9]+)/) }
   end
 end
 
@@ -2735,34 +3243,31 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.3.4_Ensure_password_hashing_algo
     Note that these change only apply to accounts configured on the local system.
   "
   impact 1.0
-  describe file("/etc/pam.d/password-auth") do
-    its("content") { should match(/^password\s+sufficient\s+pam_unix\.so\s+(\S+\s+)*sha512/) }
-  end
-  describe file("/etc/pam.d/system-auth") do
-    its("content") { should match(/^password\s+sufficient\s+pam_unix\.so\s+(\S+\s+)*sha512/) }
+  describe file("/etc/pam.d/common-password") do
+    its("content") { should match(/^password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*sha512/) }
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.1_Ensure_password_expiration_is_365_days_or_less" do
-  title "Ensure password expiration is 365 days or less"
+control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.1_Ensure_password_expiration_is_90_days_or_less" do
+  title "Ensure password expiration is 90 days or less"
   desc  "
-    The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 365 days.
+    The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age. It is recommended that the PASS_MAX_DAYS parameter be set to less than or equal to 90 days.
     
     Rationale: The window of opportunity for an attacker to leverage compromised credentials or successfully compromise credentials via an online brute force attack is limited by the age of the password. Therefore, reducing the maximum age of a password also reduces an attacker's window of opportunity.
   "
   impact 1.0
-  describe login_defs do
-    its('PASS_MAX_DAYS') { should cmp <= 365 }
+  describe file("/etc/login.defs") do
+    its("content") { should match(/^\s*PASS_MAX_DAYS\s+(90|[1-8][0-9]|[1-9])\s*(\s+#.*)?$/) }
   end
   shadow.users(/.+/).entries.each do |entry|
-      describe.one do
-        describe entry do
-          its("passwords") { should_not match(/^[^!*]/) }
-        end
-        describe entry do
-          its("max_days") { should_not cmp > 365 }
-        end
+    describe.one do
+      describe entry do
+        its("passwords") { should_not match(/^[^!*]/) }
       end
+      describe entry do
+        its("max_days") { should_not cmp > 90 }
+      end
+    end
   end
 end
 
@@ -2774,8 +3279,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.2_Ensure_minimum_days_betwee
     Rationale: By restricting the frequency of password changes, an administrator can prevent users from repeatedly changing their password in an attempt to circumvent password reuse controls.
   "
   impact 1.0
-  describe login_defs do
-    its('PASS_MIN_DAYS') { should cmp >=7 }
+  describe file("/etc/login.defs") do
+    its("content") { should match(/^\s*PASS_MIN_DAYS\s+([789]|[1-9][0-9]+)\s*(\s+#.*)?$/) }
   end
   shadow.users(/.+/).entries.each do |entry|
     describe.one do
@@ -2797,8 +3302,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.3_Ensure_password_expiration
     Rationale: Providing an advance warning that a password will be expiring gives users time to think of a secure password. Users caught unaware may choose a simple password or write it down where it may be discovered.
   "
   impact 1.0
-  describe login_defs do
-    its('PASS_WARN_AGE') { should cmp >=7 }
+  describe file("/etc/login.defs") do
+    its("content") { should match(/^\s*PASS_WARN_AGE\s+([789]|[1-9][0-9]+)\s*(\s+#.*)?$/) }
   end
   shadow.users(/.+/).entries.each do |entry|
     describe.one do
@@ -2835,32 +3340,18 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.4_Ensure_inactive_password_l
   end
 end
 
-control "xccdf_org.cisecurity.benchmarks_rule_5.4.1.5_Ensure_all_users_last_password_change_date_is_in_the_past" do
-  title "Ensure all users last password change date is in the past"
-  desc  "
-    All users should have a password change date in the past.
-    
-    Rationale: If a users recorded password change date is in the future then they could bypass any set password expiration.
-  "
-  impact 0.0
-  tag "skip-reason": "Type \"time_difference\" is currently not supported"
-  describe 'Ensure all users last password change date is in the past' do
-    skip 'Type "time_difference" is currently not supported.'
-  end
-end
-
 control "xccdf_org.cisecurity.benchmarks_rule_5.4.2_Ensure_system_accounts_are_non-login" do
   title "Ensure system accounts are non-login"
   desc  "
-    There are a number of accounts provided with CentOS 7 that are used to manage applications and are not intended to provide an interactive shell.
+    There are a number of accounts provided with Ubuntu that are used to manage applications and are not intended to provide an interactive shell.
     
-    Rationale: It is important to make sure that accounts that are not being used by regular users are prevented from being used to provide an interactive shell. By default CentOS 7 sets the password field for these accounts to an invalid string, but it is also recommended that the shell field in the password file be set to /sbin/nologin . This prevents the account from potentially being used to run any commands.
+    Rationale: It is important to make sure that accounts that are not being used by regular users are prevented from being used to provide an interactive shell. By default, Ubuntu sets the password field for these accounts to an invalid string, but it is also recommended that the shell field in the password file be set to /sbin/nologin. This prevents the account from potentially being used to run any commands.
   "
   impact 1.0
   describe passwd.where { user =~ /^(?!root|sync|shutdown|halt).*$/ } do
     its("entries") { should_not be_empty }
   end
-  describe passwd.where { user =~ /^(?!root|sync|shutdown|halt).*$/ && uid.to_i < 1000 && shell != "/sbin/nologin" } do
+  describe passwd.where { user =~ /^(?!root|sync|shutdown|halt).*$/ && uid.to_i < 1000 && shell != "/usr/sbin/nologin" } do
     its("entries") { should be_empty }
   end
 end
@@ -2870,25 +3361,36 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.4.3_Ensure_default_group_for_the
   desc  "
     The usermod command can be used to specify which group the root user belongs to. This affects permissions of files that are created by the root user.
     
-    Rationale: Using GID 0 for the root account helps prevent root -owned files from accidentally becoming accessible to non-privileged users.
+    Rationale: Using GID 0 for the **root**account helps prevent **root**-owned files from accidentally becoming accessible to non-privileged users.
   "
   impact 1.0
-  describe passwd.users('root') do
-    its('gids') { should cmp 0 }
+  describe passwd.where { user == "root" } do
+    its("entries") { should_not be_empty }
+  end
+  describe passwd.where { user == "root" && gid.to_i == 0 } do
+    its("entries") { should_not be_empty }
   end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.4.4_Ensure_default_user_umask_is_027_or_more_restrictive" do
   title "Ensure default user umask is 027 or more restrictive"
   desc  "
-    The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files ( .profile , .bashrc , etc.) in their home directories.
+    The default umask determines the permissions of files created by users. The user creating the file has the discretion of making their files and directories readable by others via the chmod command. Users who wish to allow their files and directories to be readable by others by default may choose a different default umask by inserting the umask command into the standard shell configuration files (.profile, .bashrc, etc.) in their home directories.
     
     Rationale: Setting a very secure default value for umask ensures that users make a conscious choice about their file permissions. A default umask setting of 077 causes files and directories created by users to not be readable by any other user on the system. A umask of 027 would make files and directories readable by users in the same Unix group, while a umask of 022 would make files readable by every user on the system.
   "
-  impact 0.0
-  tag "skip-reason": "The current test logic is not supported: https://github.com/inspec/inspec/issues/3199"
-  describe 'Ensure default user umask is 027 or more restrictive' do
-    skip 'Ensure default user umask is 027 or more restrictive.'
+  impact 1.0
+  describe file("/etc/bash.bashrc") do
+    its("content") { should match(/^\s*umask\s+[01234567][2367]7\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/bash.bashrc") do
+    its("content") { should_not match(/^\s*umask\s+[01234567](0[7654321]|[7654321][654321])\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/profile") do
+    its("content") { should match(/^\s*umask\s+[01234567][2367]7\s*(\s+#.*)?$/) }
+  end
+  describe file("/etc/profile") do
+    its("content") { should_not match(/^\s*umask\s+[01234567](0[7654321]|[7654321][654321])\s*(\s+#.*)?$/) }
   end
 end
 
@@ -2900,17 +3402,14 @@ control "xccdf_org.cisecurity.benchmarks_rule_5.5_Ensure_root_login_is_restricte
     Rationale: Since the system console has special properties to handle emergency situations, it is important to ensure that the console is in a physically secure location and that unauthorized consoles have not been defined.
   "
   impact 0.0
-  describe 'system console' do
-    skip 'Review the file /etc/securetty and remove entries for any consoles that are not in a physically secure location.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_5.6_Ensure_access_to_the_su_command_is_restricted" do
   title "Ensure access to the su command is restricted"
   desc  "
-    The su command allows a user to run a command or shell as another user. The program has been superseded by sudo , which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su , the su command will only allow users in the wheel group to execute su .
+    The su command allows a user to run a command or shell as another user. The program has been superseded by sudo, which allows for more granular control over privileged access. Normally, the su command can be executed by any user. By uncommenting the pam_wheel.so statement in /etc/pam.d/su, the su command will only allow users in the wheel group to execute su.
     
-    Rationale: Restricting the use of su , and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo , whereas su can only record that a user executed the su program.
+    Rationale: Restricting the use of su, and using sudo in its place, provides system administrators better control of the escalation of user privileges to execute privileged commands. The sudo utility also provides a better logging and audit mechanism, as it can log each command executed via sudo, whereas su can only record that a user executed the su program.
   "
   impact 1.0
   describe file("/etc/pam.d/su") do
@@ -2951,13 +3450,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.2_Ensure_permissions_on_etcpas
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/passwd") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/passwd") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/passwd") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/passwd") do
     it { should_not be_executable.by "owner" }
@@ -2988,10 +3487,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.3_Ensure_permissions_on_etcsha
     it { should_not be_executable.by "group" }
   end
   describe file("/etc/shadow") do
-    it { should_not be_readable.by "group" }
-  end
-  describe file("/etc/shadow") do
-    its("gid") { should cmp 0 }
+    its("gid") { should cmp 42 }
   end
   describe file("/etc/shadow") do
     it { should_not be_writable.by "group" }
@@ -3006,25 +3502,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.3_Ensure_permissions_on_etcsha
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/shadow") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/shadow") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/shadow") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/shadow") do
     it { should_not be_executable.by "owner" }
   end
   describe file("/etc/shadow") do
-    it { should_not be_readable.by "owner" }
-  end
-  describe file("/etc/shadow") do
     its("uid") { should cmp 0 }
-  end
-  describe file("/etc/shadow") do
-    it { should_not be_writable.by "owner" }
   end
 end
 
@@ -3061,13 +3551,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.4_Ensure_permissions_on_etcgro
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/group") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/group") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/group") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/group") do
     it { should_not be_executable.by "owner" }
@@ -3098,10 +3588,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.5_Ensure_permissions_on_etcgsh
     it { should_not be_executable.by "group" }
   end
   describe file("/etc/gshadow") do
-    it { should_not be_readable.by "group" }
-  end
-  describe file("/etc/gshadow") do
-    its("gid") { should cmp 0 }
+    its("gid") { should cmp 42 }
   end
   describe file("/etc/gshadow") do
     it { should_not be_writable.by "group" }
@@ -3116,25 +3603,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.5_Ensure_permissions_on_etcgsh
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/gshadow") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/gshadow") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/gshadow") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/gshadow") do
     it { should_not be_executable.by "owner" }
   end
   describe file("/etc/gshadow") do
-    it { should_not be_readable.by "owner" }
-  end
-  describe file("/etc/gshadow") do
     its("uid") { should cmp 0 }
-  end
-  describe file("/etc/gshadow") do
-    it { should_not be_writable.by "owner" }
   end
 end
 
@@ -3153,6 +3634,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.6_Ensure_permissions_on_etcpas
     it { should_not be_executable.by "group" }
   end
   describe file("/etc/passwd-") do
+    it { should_not be_readable.by "group" }
+  end
+  describe file("/etc/passwd-") do
     its("gid") { should cmp 0 }
   end
   describe file("/etc/passwd-") do
@@ -3162,16 +3646,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.6_Ensure_permissions_on_etcpas
     it { should_not be_executable.by "other" }
   end
   describe file("/etc/passwd-") do
+    it { should_not be_readable.by "other" }
+  end
+  describe file("/etc/passwd-") do
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/passwd-") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/passwd-") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/passwd-") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/passwd-") do
     it { should_not be_executable.by "owner" }
@@ -3214,25 +3701,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.7_Ensure_permissions_on_etcsha
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/shadow-") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/shadow-") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/shadow-") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/shadow-") do
     it { should_not be_executable.by "owner" }
   end
   describe file("/etc/shadow-") do
-    it { should_not be_readable.by "owner" }
-  end
-  describe file("/etc/shadow-") do
     its("uid") { should cmp 0 }
-  end
-  describe file("/etc/shadow-") do
-    it { should_not be_writable.by "owner" }
   end
 end
 
@@ -3251,6 +3732,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.8_Ensure_permissions_on_etcgro
     it { should_not be_executable.by "group" }
   end
   describe file("/etc/group-") do
+    it { should_not be_readable.by "group" }
+  end
+  describe file("/etc/group-") do
     its("gid") { should cmp 0 }
   end
   describe file("/etc/group-") do
@@ -3260,16 +3744,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.8_Ensure_permissions_on_etcgro
     it { should_not be_executable.by "other" }
   end
   describe file("/etc/group-") do
+    it { should_not be_readable.by "other" }
+  end
+  describe file("/etc/group-") do
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/group-") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/group-") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/group-") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/group-") do
     it { should_not be_executable.by "owner" }
@@ -3312,25 +3799,19 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.9_Ensure_permissions_on_etcgsh
     it { should_not be_writable.by "other" }
   end
   describe file("/etc/gshadow-") do
-    it { should_not be_setgid }
+    its("sgid") { should equal false }
   end
   describe file("/etc/gshadow-") do
-    it { should_not be_sticky }
+    its("sticky") { should equal false }
   end
   describe file("/etc/gshadow-") do
-    it { should_not be_setuid }
+    its("suid") { should equal false }
   end
   describe file("/etc/gshadow-") do
     it { should_not be_executable.by "owner" }
   end
   describe file("/etc/gshadow-") do
-    it { should_not be_readable.by "owner" }
-  end
-  describe file("/etc/gshadow-") do
     its("uid") { should cmp 0 }
-  end
-  describe file("/etc/gshadow-") do
-    it { should_not be_writable.by "owner" }
   end
 end
 
@@ -3342,10 +3823,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.10_Ensure_no_world_writable_fi
     Rationale: Data in world-writable files can be modified and compromised by any user on the system. World writable files may also indicate an incorrectly written script or program that could potentially be the cause of a larger compromise to the system's integrity.
   "
   impact 1.0
-  world_writeable_files = command('df --local -P | awk {\'if (NR!=1) print $6\'} | xargs -I \'{}\' find \'{}\' -xdev -perm -0002 -type f ! -path \'/proc/*\' ! -path \'/sys/*\' -print 2>/dev/null').stdout.split(/\r?\n/)
-  describe world_writeable_files do
-    it { should eq [] }
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_6.1.11_Ensure_no_unowned_files_or_directories_exist" do
@@ -3356,10 +3833,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.11_Ensure_no_unowned_files_or_
     Rationale: A new user who is assigned the deleted user's user ID or group ID may then end up \"owning\" these files, and thus have more access on the system than was intended.
   "
   impact 1.0
-  file_no_user = command('df --local -P | awk {\'if (NR!=1) print $6\'} | xargs -I \'{}\' find \'{}\' -xdev -nouser').stdout.split(/\r?\n/)
-  describe file_no_user do
-    it { should eq [] }
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_6.1.12_Ensure_no_ungrouped_files_or_directories_exist" do
@@ -3370,10 +3843,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.12_Ensure_no_ungrouped_files_o
     Rationale: A new user who is assigned the deleted user's user ID or group ID may then end up \"owning\" these files, and thus have more access on the system than was intended.
   "
   impact 1.0
-  file_no_group = command('df --local -P | awk {\'if (NR!=1) print $6\'} | xargs -I \'{}\' find \'{}\' -xdev -nogroup').stdout.split(/\r?\n/)
-  describe file_no_group do
-    it { should eq [] }
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_6.1.13_Audit_SUID_executables" do
@@ -3384,9 +3853,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.13_Audit_SUID_executables" do
     Rationale: There are valid reasons for SUID programs, but it is important to identify and review such programs to ensure they are legitimate.
   "
   impact 0.0
-  describe 'Audit SUID executables' do
-    skip 'Unable to audit SUID executables as this should be configured to match the owner/group run permissions.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_6.1.14_Audit_SGID_executables" do
@@ -3397,9 +3863,6 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.1.14_Audit_SGID_executables" do
     Rationale: There are valid reasons for SGID programs, but it is important to identify and review such programs to ensure they are legitimate. Review the files returned by the action in the audit section and check to see if system binaries have a different md5 checksum than what from the package. This is an indication that the binary may have been replaced.
   "
   impact 0.0
-  describe 'Audit SGID executables' do
-    skip 'Unable to audit SGID executables as this should be configured to match the owner/group run permissions.'
-  end
 end
 
 control "xccdf_org.cisecurity.benchmarks_rule_6.2.1_Ensure_password_fields_are_not_empty" do
@@ -3412,7 +3875,7 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.1_Ensure_password_fields_are_n
   impact 1.0
   shadow.users(/.+/).entries.each do |entry|
     describe entry do
-      its("password") { should match(/.+/) }
+      its("passwords") { should match(/.+/) }
     end
   end
 end
@@ -3474,24 +3937,37 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.6_Ensure_root_PATH_Integrity" 
   desc  "
     The root user can execute any command on the system and could be fooled into executing programs unintentionally if the PATH is not set correctly.
     
-    Rationale: Including the current working directory (.) or other writable directory in root 's executable path makes it likely that an attacker can gain superuser access by forcing an administrator operating as root to execute a Trojan horse program.
+    Rationale: Including the current working directory (.) or other writable directory in root's executable path makes it likely that an attacker can gain superuser access by forcing an administrator operating as root to execute a Trojan horse program.
   "
   impact 1.0
-  describe os_env('PATH').content.to_s.split(':') do
+  describe os_env("PATH").content.to_s.split(":") do
     it { should_not be_empty }
   end
-  os_env('PATH').content.to_s.split(':').each do |entry|
+  os_env("PATH").content.to_s.split(":").each do |entry|
     describe entry do
       it { should_not eq "" }
+    end
+  end
+  describe os_env("PATH").content.to_s.split(":") do
+    it { should_not be_empty }
+  end
+  os_env("PATH").content.to_s.split(":").each do |entry|
+    describe entry do
       it { should_not eq "." }
     end
   end
-  os_env('PATH').content.to_s.split(':').each do |entry|
+  os_env("PATH").content.to_s.split(":").each do |entry|
     describe file(entry) do
       it { should exist }
-      it { should_not be_writable.by 'group' }
-      it { should_not be_writable.by 'other' }
-      its( 'uid' ) { should cmp 0 }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "other" }
+    end
+    describe file(entry) do
+      its("uid") { should cmp 0 }
     end
   end
 end
@@ -3504,10 +3980,9 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.7_Ensure_all_users_home_direct
     Rationale: If the user's home directory does not exist or is unassigned, the user will be placed in \"/\" and will not be able to write any files or have local environment variables set.
   "
   impact 1.0
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes.each do |homefolder|
-    describe file(homefolder) do
-      it {should exist }
-      it {should be_directory }
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.each do |entry|
+    describe file(entry) do
+      it { should exist }
     end
   end
 end
@@ -3520,17 +3995,18 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.8_Ensure_users_home_directorie
     Rationale: Group or world-writable user home directories may enable malicious users to steal or modify other users' data or to gain another user's system privileges.
   "
   impact 1.0
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes.each do |homefolder|
-    describe file(homefolder) do
-      it { should exist }
-      it { should be_directory }
-      it { should be_executable.by('owner') }
-      it { should_not be_executable.by('other') }
-      it { should be_writable.by('owner') }
-      it { should_not be_writable.by('group') }
-      it { should_not be_writable.by('other') }
-      it { should be_readable.by('owner') }
-      it { should_not be_readable.by('other') }
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.each do |entry|
+    describe file(entry) do
+      it { should_not be_writable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_executable.by "other" }
+    end
+    describe file(entry) do
+      it { should_not be_readable.by "other" }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "other" }
     end
   end
 end
@@ -3543,14 +4019,13 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.9_Ensure_users_own_their_home_
     Rationale: Since the user is accountable for files stored in the user home directory, the user must be the owner of the directory.
   "
   impact 1.0
-  homeslist = {}
-  nologin = [ '/sbin/nologin', '/usr/bin/nologin', '/bin/nologin', '/bin/false' ]
-  passwd.where{ ! nologin.include?(shell) }.users.each_with_index { |k,i| homeslist[k] = passwd.where{ ! nologin.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    describe file(homefolder) do
-      it { should exist }
-      it { should be_directory }
-      it { should be_owned_by user }
+  a = command("cat /etc/passwd | awk -F: '{ print $1 \" \" $3 \" \" $6 }' | while read user uid dir; do if [ $uid -ge 1000 -a -d \"$dir\" -a $user != \"nfsnobody\" ]; then owner=$(stat -L -c \"%U\" \"$dir\"); if [ \"$owner\" != \"$user\" ]; then echo \"The home directory ($dir) of user $user is owned by $owner.\"; fi; fi; done").stdout.scan(/.+/)
+  describe a do
+    its("length") { should_not be > 0 }
+  end
+  a.each do |entry|
+    describe entry do
+      it { should_not match(/.+/) }
     end
   end
 end
@@ -3563,26 +4038,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.10_Ensure_users_dot_files_are_
     Rationale: Group or world-writable user configuration files may enable malicious users to steal or modify other users' data or to gain another user's system privileges.
   "
   impact 1.0
-  homeslist = {}
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.users.each_with_index {|k,i| homeslist[k] = passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    dotfiles = command('ls -d ' + homefolder + '/.[A-Za-z0-9]*').stdout.split
-    if !dotfiles.empty?
-      dotfiles.each do |dotfile|
-        if file(dotfile).exist?
-          describe file(dotfile) do
-            it { should exist }
-            it { should be_owned_by user }
-            it { should be_writable.by('owner') }
-            it { should_not be_writable.by('group') }
-            it { should_not be_writable.by('other') }
-          end
-        end
-      end
-    else
-      describe "Check write permissions for dot files for user '#{user}'" do
-        skip "User '#{user}' has no dot files"
-      end
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.map { |x| command("find #{x} -maxdepth 1 -type f -regex '.*/\..+'").stdout.split }.flatten.each do |entry|
+    describe file(entry) do
+      it { should_not be_writable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "other" }
     end
   end
 end
@@ -3595,25 +4056,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.11_Ensure_no_users_have_.forwa
     Rationale: Use of the .forward file poses a security risk in that sensitive data may be inadvertently transferred outside the organization. The .forward file also poses a risk as it can be used to execute commands that may perform unintended actions.
   "
   impact 1.0
-  homeslist = {}
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.users.each_with_index {|k,i| homeslist[k] = passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    describe file(homefolder + '/.forward') do
-      it { should_not exist }
-    end
-    hostbasedforwardfile = command('ls ' + homefolder + '/.forward.*').stdout.split
-    if ! hostbasedforwardfile.empty?
-      hostbasedforwardfile.each do |forwardfile|
-        describe file(forwardfile) do
-          it { should_not exist }
-        end
-      end
-    else
-      describe file(homefolder + '/.forward.example.com') do
-        it { should_not exist }
-      end
-    end
-    describe file(homefolder + '/.forward+') do
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.map { |x| x + '/' + ".forward"}.each do |entry|
+    describe file(entry) do
       it { should_not exist }
     end
   end
@@ -3627,10 +4071,8 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.12_Ensure_no_users_have_.netrc
     Rationale: The .netrc file presents a significant security risk since it stores passwords in unencrypted form. Even if FTP is disabled, user accounts may have brought over .netrc files from other systems which could pose a risk to those systems.
   "
   impact 1.0
-  homeslist = {}
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.users.each_with_index {|k,i| homeslist[k] = passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    describe file(homefolder + '/.netrc') do
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.map { |x| x + '/' + ".netrc"}.each do |entry|
+    describe file(entry) do
       it { should_not exist }
     end
   end
@@ -3641,29 +4083,27 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.13_Ensure_users_.netrc_Files_a
   desc  "
     While the system administrator can establish secure permissions for users' .netrc files, the users can easily override these.
     
-    Rationale: .netrcfiles may contain unencrypted passwords that may be used to attack other systems.
+    Rationale: .netrc files may contain unencrypted passwords that may be used to attack other systems.
   "
   impact 1.0
-  homeslist = {}
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.users.each_with_index {|k,i| homeslist[k] = passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    if file(homefolder + '/.netrc').exist?
-      describe file(homefolder + '/.netrc') do
-          it { should be_owned_by user }
-          it { should be_writable.by('owner') }
-          it { should_not be_writable.by('group') }
-          it { should_not be_writable.by('other') }
-          it { should be_readable.by('owner') }
-          it { should_not be_readable.by('group') }
-          it { should_not be_readable.by('other') }
-          it { should be_executable.by('owner') }
-          it { should_not be_executable.by('group') }
-          it { should_not be_executable.by('other') }
-      end
-    else
-      describe 'Ensure users .netrc Files are not group or world accessible' do
-        skip 'There is no .netrc file inside ' + user + '\'s home directory.'
-      end
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.map { |x| x + '/' + ".netrc"}.each do |entry|
+    describe file(entry) do
+      it { should_not be_executable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_readable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "group" }
+    end
+    describe file(entry) do
+      it { should_not be_executable.by "other" }
+    end
+    describe file(entry) do
+      it { should_not be_readable.by "other" }
+    end
+    describe file(entry) do
+      it { should_not be_writable.by "other" }
     end
   end
 end
@@ -3673,13 +4113,11 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.14_Ensure_no_users_have_.rhost
   desc  "
     While no .rhosts files are shipped by default, users can easily create them.
     
-    Rationale: This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf . Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf , they may have been brought over from other systems and could contain information useful to an attacker for those other systems.
+    Rationale: This action is only meaningful if .rhosts support is permitted in the file /etc/pam.conf. Even though the .rhosts files are ineffective if support is disabled in /etc/pam.conf, they may have been brought over from other systems and could contain information useful to an attacker for those other systems.
   "
   impact 1.0
-  homeslist = {}
-  passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.users.each_with_index {|k,i| homeslist[k] = passwd.where{ ! %w{ /sbin/nologin /usr/bin/nologin /bin/nologin /bin/false}.include?(shell) }.homes[i] }
-  homeslist.each do |user,homefolder|
-    describe file(homefolder + '/.rhosts') do
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.homes.map { |x| x.to_s.split(":") }.flatten.map { |x| x + '/' + ".rhosts"}.each do |entry|
+    describe file(entry) do
       it { should_not exist }
     end
   end
@@ -3688,16 +4126,14 @@ end
 control "xccdf_org.cisecurity.benchmarks_rule_6.2.15_Ensure_all_groups_in_etcpasswd_exist_in_etcgroup" do
   title "Ensure all groups in /etc/passwd exist in /etc/group"
   desc  "
-    Over time, system administration errors and changes can lead to groups being defined in /etc/passwd but not in /etc/group .
+    Over time, system administration errors and changes can lead to groups being defined in /etc/passwd but not in /etc/group.
     
     Rationale: Groups defined in the /etc/passwd file but not in the /etc/group file pose a threat to system security since group permissions are not properly managed.
   "
   impact 1.0
-  groupslist = {}
-  passwd.uids.each_with_index {|k,i| groupslist[k] = passwd.gids[i] }
-  groupslist.each do |uid,gid|
-    describe etc_group do
-      its('gids') { should include gid.to_i }
+  passwd.where { user =~ /^(?!root|halt|sync|shutdown).*/ }.where { shell != "/sbin/nologin" }.gids.map { |x| "^[^:]*:[^:]*:" + x.to_s }.map { |x| x.to_s + ":[^:]*$" }.each do |entry|
+    describe file("/etc/group") do
+      its("content") { should match Regexp.new(entry) }
     end
   end
 end
@@ -3710,8 +4146,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.16_Ensure_no_duplicate_UIDs_ex
     Rationale: Users must be assigned unique UIDs for accountability and to ensure appropriate access protections.
   "
   impact 1.0
-  describe passwd() do
-    its('uids') { should_not contain_duplicates }
+  describe passwd.where { user =~ /.*/ }.uids do
+    its("length") { should_not eq 0 }
+  end
+  a = passwd.where { user =~ /.*/ }.uids.uniq.length
+  describe passwd.where { user =~ /.*/ }.uids do
+    its("length") { should cmp == a }
   end
 end
 
@@ -3723,8 +4163,12 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.17_Ensure_no_duplicate_GIDs_ex
     Rationale: User groups must be assigned unique GIDs for accountability and to ensure appropriate access protections.
   "
   impact 1.0
-  describe etc_group() do
-    its('gids') { should_not contain_duplicates }
+  describe file("/etc/group").content.to_s.scan(/^[^:]+:[^:]+:([\d]+):[^:]*$/).flatten do
+    its("length") { should_not eq 0 }
+  end
+  a = file("/etc/group").content.to_s.scan(/^[^:]+:[^:]+:([\d]+):[^:]*$/).flatten.uniq.length
+  describe file("/etc/group").content.to_s.scan(/^[^:]+:[^:]+:([\d]+):[^:]*$/).flatten do
+    its("length") { should cmp == a }
   end
 end
 
@@ -3733,11 +4177,15 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.18_Ensure_no_duplicate_user_na
   desc  "
     Although the useradd program will not let you create a duplicate user name, it is possible for an administrator to manually edit the /etc/passwd file and change the user name.
     
-    Rationale: If a user is assigned a duplicate user name, it will create and have access to files with the first UID for that username in /etc/passwd . For example, if \"test4\" has a UID of 1000 and a subsequent \"test4\" entry has a UID of 2000, logging in as \"test4\" will use UID 1000. Effectively, the UID is shared, which is a security problem.
+    Rationale: If a user is assigned a duplicate user name, it will create and have access to files with the first UID for that username in /etc/passwd. For example, if \"test4\" has a UID of 1000 and a subsequent \"test4\" entry has a UID of 2000, logging in as \"test4\" will use UID 1000. Effectively, the UID is shared, which is a security problem.
   "
   impact 1.0
-  describe passwd() do
-    its('users') { should_not contain_duplicates }
+  describe file("/etc/passwd").content.to_s.scan(/^([^:]+):[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$/).flatten do
+    its("length") { should_not eq 0 }
+  end
+  a = file("/etc/passwd").content.to_s.scan(/^([^:]+):[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$/).flatten.uniq.length
+  describe file("/etc/passwd").content.to_s.scan(/^([^:]+):[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$/).flatten do
+    its("length") { should cmp == a }
   end
 end
 
@@ -3746,10 +4194,27 @@ control "xccdf_org.cisecurity.benchmarks_rule_6.2.19_Ensure_no_duplicate_group_n
   desc  "
     Although the groupadd program will not let you create a duplicate group name, it is possible for an administrator to manually edit the /etc/group file and change the group name.
     
-    Rationale: If a group is assigned a duplicate group name, it will create and have access to files with the first GID for that group in /etc/group . Effectively, the GID is shared, which is a security problem.
+    Rationale: If a group is assigned a duplicate group name, it will create and have access to files with the first GID for that group in /etc/group. Effectively, the GID is shared, which is a security problem.
   "
   impact 1.0
-  describe etc_group() do
-    its('groups') { should_not contain_duplicates }
+  describe file("/etc/group").content.to_s.scan(/^([^:]+):[^:]+:[\d]+:[^:]*$/).flatten do
+    its("length") { should_not eq 0 }
+  end
+  a = file("/etc/group").content.to_s.scan(/^([^:]+):[^:]+:[\d]+:[^:]*$/).flatten.uniq.length
+  describe file("/etc/group").content.to_s.scan(/^([^:]+):[^:]+:[\d]+:[^:]*$/).flatten do
+    its("length") { should cmp == a }
+  end
+end
+
+control "xccdf_org.cisecurity.benchmarks_rule_6.2.20_Ensure_shadow_group_is_empty" do
+  title "Ensure shadow group is empty"
+  desc  "
+    The shadow group allows system programs which require access the ability to read the /etc/shadow file. No users should be assigned to the shadow group.
+    
+    Rationale: Any users assigned to the shadow group would be granted read access to the /etc/shadow file. If attackers can gain read access to the /etc/shadow file, they can easily run a password cracking program against the hashed passwords to break them. Other security information that is stored in the /etc/shadow file (such as expiration) could also be useful to subvert additional user accounts.
+  "
+  impact 1.0
+  describe file("/etc/group") do
+    its("content") { should_not match(/^shadow:[^:]*:[^:]*:[^:]+$/) }
   end
 end

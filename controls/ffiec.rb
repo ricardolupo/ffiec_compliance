@@ -1,4 +1,4 @@
-require_controls 'cis-centos-level1-server' do
+require_controls 'cis-ubuntu16.04lts-level1-server' do
     control 'xccdf_org.cisecurity.benchmarks_rule_1.4.2_Ensure_bootloader_password_is_set'
     control 'xccdf_org.cisecurity.benchmarks_rule_1.2.1_Ensure_package_manager_repositories_are_configured' do
         impact 0.8
