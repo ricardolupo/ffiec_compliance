@@ -5,8 +5,10 @@ copyright: Ricardo Lupo
 copyright_email: nospam@chef.io
 license: Apache-2.0
 summary: An InSpec Compliance Profile to show FFIEC
-version: 1.1.1
+version: 1.1.2
 
 depends:
   - name: cis-ubuntu16.04lts-level1-server
+    compliance: delivery/cis-ubuntu16.04lts-level1-server
+  -name: cis-ubuntu16.04lts-level2-server
     compliance: delivery/cis-ubuntu16.04lts-level1-server
